@@ -1750,7 +1750,17 @@ with tab_standings:
             
             xpts_rows.append({"Squad Team": team, "P": len(t_past), "W": real_wins, "D": real_draws, "L": real_losses, "Actual Points": real_points, "Deserved Points (xPts)": round(simulated_xpts_accumulator, 2), "Value Delta (Real - xPts)": round(real_points - simulated_xpts_accumulator, 2)})
                 # 🟢 LINE 1752 FIXED: Stripped out the complex string to sort by the native raw index position columns instead
-        st.dataframe(pd.DataFrame(xpts_rows).sort_values(by=pd.DataFrame(xpts_rows).columns[6], ascending=False), use_container_width=True, hide_index=True)
+                # 🟢 FIXED: Check if rows exist before trying to sort by column index numbers
+        if xpts_rows:
+            xpts_df = pd.DataFrame(xpts_rows)
+            # Dynamically grab the exact "Deserved Points (xPts)" column key by matching text safely
+            sort_target_col = [c for c in xpts_df.columns if "Deserved Points" in c or "xPts" in c]
+            if sort_target_col:
+                st.dataframe(xpts_df.sort_values(by=sort_target_col[0], ascending=False), use_container_width=True, hide_index=True)
+            else:
+                st.dataframe(xpts_df, use_container_width=True, hide_index=True)
+        else:
+            st.warning("⚠️ No historical matrix records found for this league selection block.")
 
 
         st.markdown("##### 🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
