@@ -1733,6 +1733,9 @@ with tab_proj:
         # ==============================================================================
         # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID (ST.SESSION_STATE LOCKED)
         # ==============================================================================
+                # ==============================================================================
+        # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID (ST.SESSION_STATE LOCKED)
+        # ==============================================================================
         st.markdown("---")
         st.header("🏆 Divisional Outright Mass Entry Deck")
         st.markdown("Type in the live outright odds from Hollywoodbets or Easybet for all teams simultaneously to refresh your ledger matrix.")
@@ -1746,7 +1749,7 @@ with tab_proj:
         for idx, team in enumerate(sorted(all_teams_raw)):
             target_col = mass_entry_columns[idx % 3]
             with target_col:
-                # 🟢 PERFECT ALIGNMENT: 16 spaces deep using core session memory
+                # PERFECT ALIGNMENT: 16 spaces deep using core session memory
                 saved_val = float(st.session_state["global_outright_odds_shelf"].get(team, 10.00))
                 st.session_state["global_outright_odds_shelf"][team] = st.number_input(
                     f"Odds: {team}",
@@ -1765,7 +1768,7 @@ with tab_proj:
             clamped_prob = max(0.001, final_win_probability)
             fair_zero_margin_odds = 1.0 / clamped_prob
             
-            # 🟢 SYNCHRONIZED CORE MEMORY LOOKUP PASS
+            # SYNCHRONIZED CORE MEMORY LOOKUP PASS
             live_bookie_odds = float(st.session_state["global_outright_odds_shelf"].get(team, fair_zero_margin_odds))
             outright_expected_value = (clamped_prob * live_bookie_odds) - 1.0
             
@@ -1785,8 +1788,8 @@ with tab_proj:
             outright_master_df.sort_values(by="Model Win Probability (%)", ascending=False),
             use_container_width=True,
             hide_index=True
-            )
-            
+)
+
                 # ==============================================================================
 # SEGMENT 14 OF 14: UNIFIED AUDIT DISPLAY & HARD HARD-DISK CLV CURVES
 # ==============================================================================
