@@ -1715,7 +1715,9 @@ with tab_proj:
         num_simulations_pass = 10000
         simulated_championship_tally = {t: 0 for t in all_teams_raw}
         for sim_run in range(num_simulations_pass):
-            current_iter_standings = {t: team_simulation_profiles[t]["base_points"] for t in all_teams_raw}
+                        # 🟢 LINE 1718 FIXED: Grounding the seasonal simulation baseline to 0 points
+            current_iter_standings = {t: 0 for t in all_teams_raw}
+
             for i, team_a in enumerate(all_teams_raw):
                 for j, team_b in enumerate(all_teams_raw):
                     if i != j:
