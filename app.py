@@ -1515,86 +1515,85 @@ with tab_proj:
 # SEGMENT 11 OF 14: MULTI-MARKET PERSISTENT CLV LOGGER & FIXED REASONING CARD
 # =============================================================================
         with dash_right:
-             st.markdown("### 📊 Value Analytics & Tickets")
-             user_matchday_bankroll_pool = st.number_input("Active Campaign Bankroll Allocation (ZAR):", min_value=100, value=5000, step=500, key="st_bankroll_pool_input")
-             computed_juice_percentage_tax = (bookmaker_market_overround_margin - 1.0) * 100
-             st.info(f"📊 Active Bookmaker Margin Audit: This market features a built-in **{computed_juice_percentage_tax:.1f}% Juice Tax**.")
-             highest_ev_found = (prob_home * odds_1) - 1.0
-                
-             h_freq_pct, h_freq_w, h_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, home_target_key, odds_1)
-             a_freq_pct, a_freq_w, a_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, away_target_key, odds_2)
-                
-                # Calculate Field Penetration Efficiency (FPE)
-             h_fpe = (h_s["avg_box_touches_created"] / max(0.1, h_s["avg_dribbles_pct"])) * 0.1
-             a_fpe = (a_s["avg_box_touches_created"] / max(0.1, a_s["avg_dribbles_pct"])) * 0.1
-                
-             slip_string_content = (
-                 f"SISONKE HUB BETTING SLIP\n"
-                 f"Match: {home_target_key} vs {away_target_key}\n"
-                 f"Selection: HOME WIN (1) @ {odds_1:.2f}\n"
-                 f"Field Penetration Efficiency (FPE): Host: {h_fpe:.2f} | Visitor: {a_fpe:.2f}\n"
-                 f"Empirical Odds Audit: {home_target_key} wins {h_freq_pct}% of games in this price bracket ({h_freq_w}/{h_freq_tot} matches)\n"
-              )
-                
-                
-                if highest_ev_found >= 0.030 and confidence >= confidence_floor_input:
-                    st.success("ðŸ”¥ ELITE PROJECTIONS UNLOCKED (+3.0% EV Edge Verified)")
-                    st.download_button(label="ðŸ“¥ Download Odds-Validated Betting Slip (.TXT)", data=slip_string_content, file_name=f"betslip_{home_target_key}.txt", mime="text/plain")
-                else: st.error("ðŸ“‰ SELECTION REJECTED: Internal profit limits deficit bounds.")
-                
-                st.markdown("---")
-                st.markdown("##### ðŸ’° Multi-Market Real-Time Closing Line Value (CLV) Entry Logger")
-                available_clv_target_markets = [label for label, _, _, _ in raw_matrix_dictionary_build]
-                selected_clv_market_axis = st.selectbox("Select Target Traded Market Line:", available_clv_target_markets, key="clv_market_dropdown_filter")
-                
-                clv_c1, clv_c2 = st.columns(2)
-                user_placed_price = clv_c1.number_input("Your Entry Odds:", min_value=1.01, value=float(odds_1), key="clv_user_odds")
-                pinnacle_closing_price = clv_c2.number_input("Pinnacle Closing Odds:", min_value=1.01, value=2.00, key="clv_pin_odds")
-                
-                clv_storage_path = "persistent_clv_ledger.csv"
-                if st.button("ðŸ’¾ Log Closing Line Value (Cache Storage)"):
-                    new_ticket_row = pd.DataFrame([{
-                        "Timestamp": datetime.datetime.now().strftime('%Y-%m-%d'), 
-                        "Match": f"{home_target_key} vs {away_target_key}", 
-                        "Market_Traded": selected_clv_market_axis,
-                        "Entry_Odds": user_placed_price, 
-                        "Closing_Odds": pinnacle_closing_price
-                    }])
-                    if os.path.exists(clv_storage_path):
-                        existing_clv = pd.read_csv(clv_storage_path)
-                        updated_clv = pd.concat([existing_clv, new_ticket_row], ignore_index=True)
-                    else: updated_clv = new_ticket_row
-                    updated_clv.to_csv(clv_storage_path, index=False)
-                    st.session_state["display_replicated_ledger_df"] = updated_clv.copy()
-                    st.success(f"ðŸŽ° Multi-market ticket logged to hard disk storage successfully!")
+            st.markdown("### 📊 Value Analytics & Tickets")
+            user_matchday_bankroll_pool = st.number_input("Active Campaign Bankroll Allocation (ZAR):", min_value=100, value=5000, step=500, key="st_bankroll_pool_input")
+            computed_juice_percentage_tax = (bookmaker_market_overround_margin - 1.0) * 100
+            st.info(f"📊 Active Bookmaker Margin Audit: This market features a built-in **{computed_juice_percentage_tax:.1f}% Juice Tax**.")
+            highest_ev_found = (prob_home * odds_1) - 1.0
+            
+            h_freq_pct, h_freq_w, h_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, home_target_key, odds_1)
+            a_freq_pct, a_freq_w, a_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, away_target_key, odds_2)
+            
+            # Calculate Field Penetration Efficiency (FPE)
+            h_fpe = (h_s["avg_box_touches_created"] / max(0.1, h_s["avg_dribbles_pct"])) * 0.1
+            a_fpe = (a_s["avg_box_touches_created"] / max(0.1, a_s["avg_dribbles_pct"])) * 0.1
+            
+            slip_string_content = (
+                f"SISONKE HUB BETTING SLIP\n"
+                f"Match: {home_target_key} vs {away_target_key}\n"
+                f"Selection: HOME WIN (1) @ {odds_1:.2f}\n"
+                f"Field Penetration Efficiency (FPE): Host: {h_fpe:.2f} | Visitor: {a_fpe:.2f}\n"
+                f"Empirical Odds Audit: {home_target_key} wins {h_freq_pct}% of games in this price bracket ({h_freq_w}/{h_freq_tot} matches)\n"
+            )
+            
+            if highest_ev_found >= 0.030 and confidence >= confidence_floor_input:
+                st.success("🔥 ELITE PROJECTIONS UNLOCKED (+3.0% EV Edge Verified)")
+                st.download_button(label="📥 Download Odds-Validated Betting Slip (.TXT)", data=slip_string_content, file_name=f"betslip_{home_target_key}.txt", mime="text/plain")
+            else: st.error("📉 SELECTION REJECTED: Internal profit limits deficit bounds.")
+            
+            st.markdown("---")
+            st.markdown("##### 💰 Multi-Market Real-Time Closing Line Value (CLV) Entry Logger")
+            available_clv_target_markets = [label for label, _, _, _ in raw_matrix_dictionary_build]
+            selected_clv_market_axis = st.selectbox("Select Target Traded Market Line:", available_clv_target_markets, key="clv_market_dropdown_filter")
+            
+            clv_c1, clv_c2 = st.columns(2)
+            user_placed_price = clv_c1.number_input("Your Entry Odds:", min_value=1.01, value=float(odds_1), key="clv_user_odds")
+            pinnacle_closing_price = clv_c2.number_input("Pinnacle Closing Odds:", min_value=1.01, value=2.00, key="clv_pin_odds")
+            
+            clv_storage_path = "persistent_clv_ledger.csv"
+            if st.button("💾 Log Closing Line Value (Cache Storage)"):
+                new_ticket_row = pd.DataFrame([{
+                    "Timestamp": datetime.datetime.now().strftime('%Y-%m-%d'), 
+                    "Match": f"{home_target_key} vs {away_target_key}", 
+                    "Market_Traded": selected_clv_market_axis,
+                    "Entry_Odds": user_placed_price, 
+                    "Closing_Odds": pinnacle_closing_price
+                }])
+                if os.path.exists(clv_storage_path):
+                    existing_clv = pd.read_csv(clv_storage_path)
+                    updated_clv = pd.concat([existing_clv, new_ticket_row], ignore_index=True)
+                else: updated_clv = new_ticket_row
+                updated_clv.to_csv(clv_storage_path, index=False)
+                st.session_state["display_replicated_ledger_df"] = updated_clv.copy()
+                st.success(f"🎰 Multi-market ticket logged to hard disk storage successfully!")
 
-                st.markdown("---")
-                st.markdown("##### ðŸŽ¯ Shots on Target (SOT) Performance Intensities")
-                sot_table_data = [
-                    {"Squad Metric Axis": f"HOST: {home_target_key}", "SOT Required to Score 1 Goal": f"{h_s['home_sot_to_score']} shots", "SOT Allowed per 1 Goal Conceded": f"{h_s['home_sot_to_allow']} shots"},
-                    {"Squad Metric Axis": f"VISITOR: {away_target_key}", "SOT Required to Score 1 Goal": f"{a_s['away_sot_to_score']} shots", "SOT Allowed per 1 Goal Conceded": f"{a_s['away_sot_to_allow']} shots"}
-                ]
-                st.dataframe(pd.DataFrame(sot_table_data), use_container_width=True, hide_index=True)
-                st.metric("Match Evaluation Confidence", f"{confidence}%")
+            st.markdown("---")
+            st.markdown("##### 🎯 Shots on Target (SOT) Performance Intensities")
+            sot_table_data = [
+                {"Squad Metric Axis": f"HOST: {home_target_key}", "SOT Required to Score 1 Goal": f"{h_s['home_sot_to_score']} shots", "SOT Allowed per 1 Goal Conceded": f"{h_s['home_sot_to_allow']} shots"},
+                {"Squad Metric Axis": f"VISITOR: {away_target_key}", "SOT Required to Score 1 Goal": f"{a_s['away_sot_to_score']} shots", "SOT Allowed per 1 Goal Conceded": f"{a_s['away_sot_to_allow']} shots"}
+            ]
+            st.dataframe(pd.DataFrame(sot_table_data), use_container_width=True, hide_index=True)
+            st.metric("Match Evaluation Confidence", f"{confidence}%")
 
-                st.markdown("---")
-                st.markdown("##### ðŸ§  Automated Institutional Prediction Reasoning Core")
-                reasoning_verdict_string = f"The model's evaluation for **{home_target_key} vs {away_target_key}** is formulated around underlying creation security. "
-                reasoning_verdict_string += (
-                    f"Historical pricing sweeps confirm that **{home_target_key}** secures a real win frequency of **{h_freq_pct}%** "
-                    f"when bookies price them around the `{odds_1:.2f}` zone bracket ({h_freq_w} wins out of {h_freq_tot} matches). "
-                    f"Conversely, **{away_target_key}** demonstrates an empirical victory rate of **{a_freq_pct}%** inside their corresponding `{odds_2:.2f}` pricing tier bracket ({a_freq_w}/{a_freq_tot}). "
-                )
-                
-                reasoning_verdict_string += f"**Field Penetration Efficiency (FPE) Analytics:** Host FPE is tracked at `{h_fpe:.2f}` vs Visitor FPE of `{a_fpe:.2f}`. This accurately isolates heavy penalty-box domain force from sterile sideways back-half passing strings. "
-                
-                if prob_home > 0.45: reasoning_verdict_string += f"Host **{home_target_key}** holds spatial dominance with superior box touch density, reinforced by their current `{h_streak_label}` form vector. "
-                elif prob_away > 0.45: reasoning_verdict_string += f"Visitor **{away_target_key}** features elite clinical finishing velocity, making them highly dangerous in this structural tier window. "
-                else: reasoning_verdict_string += f"A heavy tactical gridlock is detected via low-scoring over-dispersion margins, heavily inflating the probability mass of the main draw matrix cells. "
-                reasoning_verdict_string += f"Tournament context modality locked onto `{active_tournament_format_stage}` with an auto-tuned variance dampener scale of `{automatically_tuned_vol_dampener:.2f}`."
-                
-                # FIXED: Swapped out broken st.help() for a clean, professional st.info() text block
-                st.info(reasoning_verdict_string)
+            st.markdown("---")
+            st.markdown("##### 🧠 Automated Institutional Prediction Reasoning Core")
+            reasoning_verdict_string = f"The model's evaluation for **{home_target_key} vs {away_target_key}** is formulated around underlying creation security. "
+            reasoning_verdict_string += (
+                f"Historical pricing sweeps confirm that **{home_target_key}** secures a real win frequency of **{h_freq_pct}%** "
+                f"when bookies price them around the `{odds_1:.2f}` zone bracket ({h_freq_w} wins out of {h_freq_tot} matches). "
+                f"Conversely, **{away_target_key}** demonstrates an empirical victory rate of **{a_freq_pct}%** inside their corresponding `{odds_2:.2f}` pricing tier bracket ({a_freq_w}/{a_freq_tot}). "
+            )
+            
+            reasoning_verdict_string += f"**Field Penetration Efficiency (FPE) Analytics:** Host FPE is tracked at `{h_fpe:.2f}` vs Visitor FPE of `{a_fpe:.2f}`. This accurately isolates heavy penalty-box domain force from sterile sideways back-half passing strings. "
+            
+            if prob_home > 0.45: reasoning_verdict_string += f"Host **{home_target_key}** holds spatial dominance with superior box touch density, reinforced by their current `{h_streak_label}` form vector. "
+            elif prob_away > 0.45: reasoning_verdict_string += f"Visitor **{away_target_key}** features elite clinical finishing velocity, making them highly dangerous in this structural tier window. "
+            else: reasoning_verdict_string += f"A heavy tactical gridlock is detected via low-scoring over-dispersion margins, heavily inflating the probability mass of the main draw matrix cells. "
+            reasoning_verdict_string += f"Tournament context modality locked onto `{active_tournament_format_stage}` with an auto-tuned variance dampener scale of `{automatically_tuned_vol_dampener:.2f}`."
+            
+            st.info(reasoning_verdict_string)
+
     # ==============================================================================
 # SEGMENT 12 OF 14: GRAPH CABINET EXPANDERS & FPE-EQUIPPED VALUATION SHEET
 # ==============================================================================
