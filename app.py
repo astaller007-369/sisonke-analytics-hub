@@ -1515,26 +1515,26 @@ with tab_proj:
 # SEGMENT 11 OF 14: MULTI-MARKET PERSISTENT CLV LOGGER & FIXED REASONING CARD
 # =============================================================================
             with dash_right:
-                 st.markdown("### 📊 Value Analytics & Tickets")
-                 user_matchday_bankroll_pool = st.number_input("Active Campaign Bankroll Allocation (ZAR):", min_value=100, value=5000, step=500, key="st_bankroll_pool_input")
-                 computed_juice_percentage_tax = (bookmaker_market_overround_margin - 1.0) * 100
-                 st.info(f"📊 Active Bookmaker Margin Audit: This market features a built-in **{computed_juice_percentage_tax:.1f}% Juice Tax**.")
-                 highest_ev_found = (prob_home * odds_1) - 1.0
+                st.markdown("### 📊 Value Analytics & Tickets")
+                user_matchday_bankroll_pool = st.number_input("Active Campaign Bankroll Allocation (ZAR):", min_value=100, value=5000, step=500, key="st_bankroll_pool_input")
+                computed_juice_percentage_tax = (bookmaker_market_overround_margin - 1.0) * 100
+                st.info(f"📊 Active Bookmaker Margin Audit: This market features a built-in **{computed_juice_percentage_tax:.1f}% Juice Tax**.")
+                highest_ev_found = (prob_home * odds_1) - 1.0
                 
-                 h_freq_pct, h_freq_w, h_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, home_target_key, odds_1)
-                 a_freq_pct, a_freq_w, a_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, away_target_key, odds_2)
+                h_freq_pct, h_freq_w, h_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, home_target_key, odds_1)
+                a_freq_pct, a_freq_w, a_freq_tot = engine.calculate_historical_odds_win_frequency(filtered_df, away_target_key, odds_2)
                 
                 # Calculate Field Penetration Efficiency (FPE)
-                 h_fpe = (h_s["avg_box_touches_created"] / max(0.1, h_s["avg_dribbles_pct"])) * 0.1
-                 a_fpe = (a_s["avg_box_touches_created"] / max(0.1, a_s["avg_dribbles_pct"])) * 0.1
+                h_fpe = (h_s["avg_box_touches_created"] / max(0.1, h_s["avg_dribbles_pct"])) * 0.1
+                a_fpe = (a_s["avg_box_touches_created"] / max(0.1, a_s["avg_dribbles_pct"])) * 0.1
                 
-                 slip_string_content = (
+                slip_string_content = (
                     f"SISONKE HUB BETTING SLIP\n"
                     f"Match: {home_target_key} vs {away_target_key}\n"
                     f"Selection: HOME WIN (1) @ {odds_1:.2f}\n"
                     f"Field Penetration Efficiency (FPE): Host: {h_fpe:.2f} | Visitor: {a_fpe:.2f}\n"
                     f"Empirical Odds Audit: {home_target_key} wins {h_freq_pct}% of games in this price bracket ({h_freq_w}/{h_freq_tot} matches)\n"
-                 )
+                )
                 
                 
                 if highest_ev_found >= 0.030 and confidence >= confidence_floor_input:
