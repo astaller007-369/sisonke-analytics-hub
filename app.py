@@ -1749,7 +1749,9 @@ with tab_standings:
                 else: simulated_xpts_accumulator += (p_away_cell * 3.0) + (p_draw_cell * 1.0)
             
             xpts_rows.append({"Squad Team": team, "P": len(t_past), "W": real_wins, "D": real_draws, "L": real_losses, "Actual Points": real_points, "Deserved Points (xPts)": round(simulated_xpts_accumulator, 2), "Value Delta (Real - xPts)": round(real_points - simulated_xpts_accumulator, 2)})
-        st.dataframe(pd.DataFrame(xpts_rows).sort_values(by="Deserved Points (xPts)", ascending=False), use_container_width=True, hide_index=True)
+                # 🟢 LINE 1752 FIXED: Stripped out the complex string to sort by the native raw index position columns instead
+        st.dataframe(pd.DataFrame(xpts_rows).sort_values(by=pd.DataFrame(xpts_rows).columns[6], ascending=False), use_container_width=True, hide_index=True)
+
 
         st.markdown("##### 🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
         num_simulations_pass = 10000
