@@ -1700,80 +1700,67 @@ with tab_proj:
                 })
             st.markdown("#### 🎫 Complete FPE-Equipped 11-Column Options Valuation Sheet")
             st.dataframe(pd.DataFrame(all_markets_rendered_rows), use_container_width=True, hide_index=True)
-                    
-            # ==============================================================================
-# SEGMENT 13 OF 14: DOUBLE LEADERBOARDS & DYNAMIC 10,000 SEASON OUTRIGHTS
-# ==============================================================================
-
         
                 
                 # ==============================================================================
-        # 🔮 10,000 MONTE CARLO MATCH FORECAST SIMULATOR (CONNECTED TO FUNCTION BASES)
+        # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID & UPGRADED LEDGER
         # ==============================================================================
-        st.markdown("---")
-        st.subheader("🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
+        st.markdown("##### 🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
         num_simulations_pass = 10000
         simulated_championship_tally = {t: 0 for t in all_teams_raw}
-
-        # Run 10,000 complete season simulations natively entirely offline
+        
+        # 🟢 NEW DATA CONTAINER: Safely tracks the total points scored by every team across all runs
+        simulated_total_points_accumulator = {t: 0.0 for t in all_teams_raw}
+        
         for sim_run in range(num_simulations_pass):
-            # Grounding the seasonal simulation baseline to 0 points safely
-            current_iter_standings = {t: 0 for t in all_teams_raw}
-            
+            # ORIGINAL CALCULATION: Safely extracts your native base_points tracking values
+            current_iter_standings = {}
+            for t in all_teams_raw:
+                team_profile_data = team_simulation_profiles.get(t, {"base_points": 0, "att_vector": 1.45})
+                current_iter_standings[t] = team_profile_data.get("base_points", 0)
+                
             for i, team_a in enumerate(all_teams_raw):
                 for j, team_b in enumerate(all_teams_raw):
                     if i != j:
-                        # 🟢 PERFECT ALIGNMENT: Uses your active function parameters directly!
-                        # Falls back to an even 1.0 base value if a generic squad is checked
-                        att_a = float(h_att) if team_a == home_target_key else 1.0
-                        att_b = float(a_att) if team_b == away_target_key else 1.0
+                        # ORIGINAL CALCULATION: Extracts your native attack power vectors
+                        profile_a = team_simulation_profiles.get(team_a, {"base_points": 0, "att_vector": 1.45})
+                        profile_b = team_simulation_profiles.get(team_b, {"att_vector": 1.45})
                         
-                        lambda_a = att_a * automatically_tuned_hfa_factor
-                        lambda_b = att_b
+                        lambda_a = profile_a.get("att_vector", 1.45) * automatically_tuned_hfa_factor
+                        lambda_b = profile_b.get("att_vector", 1.45)
                         
-                        # Roll the poisson dice for both teams to compute match points allocation
-                        goals_a = np.random.poisson(lambda_a)
-                        goals_b = np.random.poisson(lambda_b)
+                        if np.random.poisson(lambda_a) > np.random.poisson(lambda_b): current_iter_standings[team_a] += 3
+                        elif np.random.poisson(lambda_a) < np.random.poisson(lambda_b): current_iter_standings[team_b] += 3
+                        else: current_iter_standings[team_a] += 1; current_iter_standings[team_b] += 1
                         
-                        if goals_a > goals_b: 
-                            current_iter_standings[team_a] += 3
-                        elif goals_a < goals_b: 
-                            current_iter_standings[team_b] += 3
-                        else: 
-                            current_iter_standings[team_a] += 1
-                            current_iter_standings[team_b] += 1
-                            
-            # Crown the champion for this simulated reality run
+            # 🟢 NEW MATRIX HOOK: Accumulates the final point tallies for the end of season average calculation
+            for t in all_teams_raw:
+                simulated_total_points_accumulator[t] += current_iter_standings[t]
+                
             winner_squad = max(current_iter_standings, key=current_iter_standings.get)
             simulated_championship_tally[winner_squad] += 1
-        
-        
 
-            
-            # ==============================================================================
-# SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID & UPGRADED LEDGER
-# ==============================================================================
-        # ==============================================================================
-        # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID (ST.SESSION_STATE LOCKED)
-        # ==============================================================================
-                # ==============================================================================
-        # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID (ST.SESSION_STATE LOCKED)
-        # ==============================================================================
         st.markdown("---")
         st.header("🏆 Divisional Outright Mass Entry Deck")
         st.markdown("Type in the live outright odds from Hollywoodbets or Easybet for all teams simultaneously to refresh your ledger matrix.")
 
-        # Step 1: Initialize a persistent dictionary memory cache directly inside core memory banks
+        # Initialize a persistent dictionary memory cache inside core memory banks
         if "global_outright_odds_shelf" not in st.session_state:
-            st.session_state["global_outright_odds_shelf"] = {team: 10.00 for team in all_teams_raw}
+            st.session_state["global_outright_odds_shelf"] = {}
 
-        # Step 2: Build a clean, multi-column entry deck that updates all at once
+        # Build a clean, multi-column entry deck that updates all at once
         mass_entry_columns = st.columns(3)  # Arranges entry boxes into 3 scannable rows
         for idx, team in enumerate(sorted(all_teams_raw)):
             target_col = mass_entry_columns[idx % 3]
             with target_col:
-                # PERFECT ALIGNMENT: 16 spaces deep using core session memory
-                saved_val = float(st.session_state["global_outright_odds_shelf"].get(team, 10.00))
+                # Calculates your original default baseline price multiplier natively entirely offline
+                final_win_probability = simulated_championship_tally[team] / num_simulations_pass
+                clamped_prob = max(0.001, final_win_probability)
+                fair_zero_margin_odds = 1.0 / clamped_prob
+                original_script_default_odds = float(odds_1 * 1.5) if 'odds_1' in locals() else fair_zero_margin_odds
+                
+                # Pre-populate with saved data or your original script's odds calculation safely
+                saved_val = float(st.session_state["global_outright_odds_shelf"].get(team, original_script_default_odds))
                 st.session_state["global_outright_odds_shelf"][team] = st.number_input(
                     f"Odds: {team}",
                     min_value=1.01,
@@ -1782,7 +1769,6 @@ with tab_proj:
                     key=f"mass_out_odds_input_{team.replace(' ', '_')}"
                 )
 
-        # Step 3: Compile the Upgraded 6-Column Outright Value Ledger Grid
         st.markdown("##### 📊 Integrated 10,000-Iteration Outright Value Ledger")
 
         outright_ledger_payload = []
@@ -1791,27 +1777,32 @@ with tab_proj:
             clamped_prob = max(0.001, final_win_probability)
             fair_zero_margin_odds = 1.0 / clamped_prob
             
-            # SYNCHRONIZED CORE MEMORY LOOKUP PASS
+            # 🟢 EXTENDED CALCULATION: Compares cumulative simulation points against total runs to find the average
+            expected_end_points_average = round(simulated_total_points_accumulator[team] / num_simulations_pass)
+            
+            # SYNCED CORE LOOKUP: Reads your mass entry deck inputs for every team all at once
             live_bookie_odds = float(st.session_state["global_outright_odds_shelf"].get(team, fair_zero_margin_odds))
             outright_expected_value = (clamped_prob * live_bookie_odds) - 1.0
             
             outright_ledger_payload.append({
                 "Competing Squad": team,
                 "Model Win Probability (%)": f"{final_win_probability * 100:.1f}%",
+                "Expected End Points": f"{expected_end_points_average} pts",  # 🟢 BRAND NEW COLUMN ACTIVE
                 "Fair Value Odds Line": f"{fair_zero_margin_odds:.2f}",
                 "Sportsbook Outright Odds": f"{live_bookie_odds:.2f}",
-                "Model Edge (%)": f"{outright_expected_value * 100:+.1f}%",
-                "Trading Outright Verdict": "🔥 FUTURES ALPHA" if outright_expected_value >= 0.05 else ("🛑 TRAP / FADE" if outright_expected_value <= -0.05 else "🔷 EFFICIENT HOLD")
+                "Model Edge (%)": f"{outright_expected_value * 100:+.1f}%",  
+                "Trading Outright Verdict": "🔥 FUTURES ALPHA" if outright_expected_value >= 0.05 else "⚠️ NEGATIVE HOLD" 
             })
 
         outright_master_df = pd.DataFrame(outright_ledger_payload)
 
-        # Render the finalized 6-column chart table live on your display screen pane view
+        # Render the finalized 7-column chart table live on your display screen pane view
         st.dataframe(
             outright_master_df.sort_values(by="Model Win Probability (%)", ascending=False),
             use_container_width=True,
             hide_index=True
-)
+            )
+            
 
                 # ==============================================================================
 # SEGMENT 14 OF 14: UNIFIED AUDIT DISPLAY & HARD HARD-DISK CLV CURVES
