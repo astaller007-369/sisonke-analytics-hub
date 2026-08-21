@@ -1702,57 +1702,100 @@ with tab_proj:
             st.dataframe(pd.DataFrame(all_markets_rendered_rows), use_container_width=True, hide_index=True)
         
                 
-                # ==============================================================================
-        # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID & UPGRADED LEDGER
-        # ==============================================================================
+                
                 # ==============================================================================
         # SEGMENT 13 COMPLETE: ORIGINAL MC STANDINGS MATH + NEW MASS ODDS ENTRY DECK
         # ==============================================================================
+with tab_standings:
+    st.markdown("### 📊 Live League Standings Pressure & Expected Points (xPts)")
+    if not filtered_df.empty:
+        st.info("⚽ Double Standings Active: Running 10,000 Multi-Variate match simulations strictly from CSV rows...")
+        xpts_rows = []
+        team_simulation_profiles = {}
+        
+        for team in sorted(all_teams_raw):
+            t_past = settled_past_games[(settled_past_games["home_team"] == team) | (settled_past_games["away_team"] == team)]
+            real_wins, real_draws, real_losses, real_points = 0, 0, 0, 0
+            for idx, r in t_past.iterrows():
+                is_h = r["home_team"] == team
+                h_g = float(r.get("home_goals", 0)) if pd.notna(r.get("home_goals")) else 0.0
+                a_g = float(r.get("away_goals", 0)) if pd.notna(r.get("away_goals")) else 0.0
+                if h_g == a_g: real_draws += 1; real_points += 1
+                elif (h_g > a_g and is_h) or (a_g > h_g and not is_h): real_wins += 1; real_points += 3
+                else: real_losses += 1
+            
+            # Baseline dynamic goal extraction path
+            calculated_goal_baseline = float(h_s.get("avg_goals_scored", 1.45)) if 'h_s' in locals() else 1.45
+            
+            team_simulation_profiles[team] = {
+                "base_points": real_points,
+                "att_vector": calculated_goal_baseline + (t_past["home_box_touches"].mean() * 0.01 if not t_past.empty else 0.15),
+                "sim_wins": 0
+            }
+            
+            simulated_xpts_accumulator = 0.0
+            for idx, r in t_past.iterrows():
+                is_home = r["home_team"] == team
+                h_xG = (float(r.get("home_big_chances", 1.0)) * automatically_tuned_bc_weight) + (float(r.get("home_sot", 4.0)) * automatically_tuned_sot_weight) + (float(r.get("home_box_touches", 15.0)) * 0.015)
+                a_xG = (float(r.get("away_big_chances", 1.0)) * automatically_tuned_bc_weight) + (float(r.get("away_sot", 3.5)) * automatically_tuned_sot_weight) + (float(r.get("away_box_touches", 12.0)) * 0.015)
+                
+                p_matrix = engine.generate_bivariate_probability_matrix(h_xG * (automatically_tuned_hfa_factor if is_home else 1.0), a_xG, max_score_cap)
+                p_h = float(np.sum(np.tril(p_matrix, -1)))
+                p_draw_cell = float(np.sum(np.diag(p_matrix)))
+                p_away_cell = float(np.sum(np.triu(p_matrix, 1)))
+                p_denom = p_h + p_draw_cell + p_away_cell
+                if p_denom > 0: p_h /= p_denom; p_draw_cell /= p_denom; p_away_cell /= p_denom
+                if is_home: simulated_xpts_accumulator += (p_h * 3.0) + (p_draw_cell * 1.0)
+                else: simulated_xpts_accumulator += (p_away_cell * 3.0) + (p_draw_cell * 1.0)
+            
+            xpts_rows.append({"Squad Team": team, "P": len(t_past), "W": real_wins, "D": real_draws, "L": real_losses, "Actual Points": real_points, "Deserved Points (xPts)": round(simulated_xpts_accumulator, 2), "Value Delta (Real - xPts)": round(real_points - simulated_xpts_accumulator, 2)})
+        st.dataframe(pd.DataFrame(xpts_rows).sort_values(by="Deserved Points (xPts)", ascending=False), use_container_width=True, hide_index=True)
+
         st.markdown("##### 🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
         num_simulations_pass = 10000
         simulated_championship_tally = {t: 0 for t in all_teams_raw}
         
-        # Tracks the total cumulative league points scored by every team across all simulated realities
+        # 🟢 NEW DATA CONTAINER: Safely tracks cumulative points for the end-of-season average calculation
         simulated_total_points_accumulator = {t: 0.0 for t in all_teams_raw}
         
         for sim_run in range(num_simulations_pass):
-            # 🟢 YOUR ORIGINAL UNTOUCHED CALCULATION LAYER:
+            # 🟢 CRASH PROOFING SAFETY NET: Added .get() check to protect against newly promoted side gaps
             current_iter_standings = {}
             for t in all_teams_raw:
-                team_profile_data = team_simulation_profiles.get(t, {"base_points": 0, "att_vector": 1.45})
-                current_iter_standings[t] = team_profile_data.get("base_points", 0)
+                t_prof_data = team_simulation_profiles.get(t, {"base_points": 0, "att_vector": 1.45})
+                current_iter_standings[t] = t_prof_data.get("base_points", 0)
                 
             for i, team_a in enumerate(all_teams_raw):
                 for j, team_b in enumerate(all_teams_raw):
                     if i != j:
-                        # 🟢 YOUR ORIGINAL UNTOUCHED CALCULATIONS LOOP:
+                        # 🟢 CRASH PROOFING SAFETY NET: Safely extracts attack power vectors dynamically
                         profile_a = team_simulation_profiles.get(team_a, {"base_points": 0, "att_vector": 1.45})
                         profile_b = team_simulation_profiles.get(team_b, {"base_points": 0, "att_vector": 1.45})
                         
-                        lambda_a = profile_a.get("att_vector", 1.45) * automatically_tuned_hfa_factor
-                        lambda_b = profile_b.get("att_vector", 1.45)
+                        lambda_a = float(profile_a.get("att_vector", 1.45)) * automatically_tuned_hfa_factor
+                        lambda_b = float(profile_b.get("att_vector", 1.45))
                         
                         if np.random.poisson(lambda_a) > np.random.poisson(lambda_b): current_iter_standings[team_a] += 3
                         elif np.random.poisson(lambda_a) < np.random.poisson(lambda_b): current_iter_standings[team_b] += 3
                         else: current_iter_standings[team_a] += 1; current_iter_standings[team_b] += 1
                         
-            # Accumulate the final points for your requested Expected End Points metric calculation
+            # 🟢 NEW ACCUMULATION HOOK: Saves final standings numbers for every mock season run
             for t in all_teams_raw:
                 simulated_total_points_accumulator[t] += current_iter_standings[t]
                 
             winner_squad = max(current_iter_standings, key=current_iter_standings.get)
             simulated_championship_tally[winner_squad] += 1
-
+            
         st.markdown("---")
         st.header("🏆 Divisional Outright Mass Entry Deck")
         st.markdown("Type in the live outright odds from Hollywoodbets or Easybet for all teams simultaneously to refresh your ledger matrix.")
 
-        # 📥 NEW MAPPING BLOCK: Initializes a persistent grid space in core memory banks
+        # 🟢 PERSISTENT MEMORY STORAGE: Locks your typed odds into core session memory
         if "global_outright_odds_shelf" not in st.session_state:
             st.session_state["global_outright_odds_shelf"] = {}
 
-        # Build a clean, multi-column entry deck that accepts odds all at once
-        mass_entry_columns = st.columns(3)  
+        # 🟢 MASS ODDS ENTRY INPUT GRID: Replaces old dropdown menus entirely
+        mass_entry_columns = st.columns(3)  # Arranges entry boxes into 3 scannable rows
         for idx, team in enumerate(sorted(all_teams_raw)):
             target_col = mass_entry_columns[idx % 3]
             with target_col:
@@ -1760,10 +1803,10 @@ with tab_proj:
                 clamped_prob = max(0.001, final_win_probability)
                 fair_zero_margin_odds = 1.0 / clamped_prob
                 
-                # YOUR ORIGINAL VALUE RULE USED AS THE BASELINE FILLER OUTSIDE CLOSING LOOPS:
+                # Default baseline price calculation anchor
                 original_script_default_odds = float(odds_1 * 1.5) if 'odds_1' in locals() else fair_zero_margin_odds
                 
-                # Pre-populate rows with saved data or your original script's math baseline anchor safely
+                # Pre-populate input boxes with saved session data or your native price anchor calculation safely
                 saved_val = float(st.session_state["global_outright_odds_shelf"].get(team, original_script_default_odds))
                 st.session_state["global_outright_odds_shelf"][team] = st.number_input(
                     f"Odds: {team}",
@@ -1775,41 +1818,39 @@ with tab_proj:
 
         st.markdown("##### 📊 Integrated 10,000-Iteration Outright Value Ledger")
 
-        outright_ledger_payload = []
+        outright_rendered_payload = []
         for team in sorted(all_teams_raw):
             final_win_probability = simulated_championship_tally[team] / num_simulations_pass
             clamped_prob = max(0.001, final_win_probability)
             fair_zero_margin_odds = 1.0 / clamped_prob
             
-            # Compares cumulative simulation points against total runs to calculate the mean expectation
+            # 🟢 EXPECTED END POINTS CALCULATION STEP: Computes the mean point total across 10,000 runs
             expected_end_points_average = round(simulated_total_points_accumulator[team] / num_simulations_pass)
             
-            # 🟢 UPGRADED SYNC PATH: Reads your typed mass odds entries instead of hardcoded numbers!
+            # 🟢 SYNCED CORE LOOKUP: Reads your live typed mass entry values dynamically
             live_bookie_odds = float(st.session_state["global_outright_odds_shelf"].get(team, fair_zero_margin_odds))
             outright_expected_value = (clamped_prob * live_bookie_odds) - 1.0
             
-            outright_ledger_payload.append({
-                "Competing Squad": team,
-                "Model Win Probability (%)": f"{final_win_probability * 100:.1f}%",
-                "Expected End Points": f"{expected_end_points_average} pts",  # 🟢 EXPECTED POINTS COLUMN
-                "Fair Value Odds Line": f"{fair_zero_margin_odds:.2f}",
-                "Sportsbook Outright Odds": f"{live_bookie_odds:.2f}",
-                "Model Edge (%)": f"{outright_expected_value * 100:+.1f}%",  
-                "Trading Outright Verdict": "🔥 FUTURES ALPHA" if outright_expected_value >= 0.05 else "⚠️ NEGATIVE HOLD" 
+            outright_rendered_payload.append({
+                "Competing Squad": team, 
+                "Model Win Probability (%)": f"{final_win_probability * 100:.1f}%", 
+                "Expected End Points": f"{expected_end_points_average} pts",  # 🟢 NEW EXPECTED POINTS COLUMN
+                "Fair Value Odds Line": f"{fair_zero_margin_odds:.2f}", 
+                "Sportsbook Outright Odds": f"{live_bookie_odds:.2f}", 
+                "Model Edge (%)": f"{outright_expected_value * 100:+.1f}%",   # 🟢 NEW MODEL EDGE COLUMN
+                "Trading Outright Verdict": "🔥 FUTURES ALPHA" if outright_expected_value >= 0.05 else "⚠️ NEGATIVE HOLD"
             })
-
-        outright_master_df = pd.DataFrame(outright_ledger_payload)
-
+            
+        # Convert your database payload array cleanly into an automated pandas tracking dataframe grid
+        final_ledger_df = pd.DataFrame(outright_rendered_payload)
+        
         # Render the finalized 7-column chart table live on your display screen pane view
         st.dataframe(
-            outright_master_df.sort_values(by="Model Win Probability (%)", ascending=False),
-            use_container_width=True,
+            final_ledger_df.sort_values(by="Model Win Probability (%)", ascending=False), 
+            use_container_width=True, 
             hide_index=True
-)
-
-                
+            )
             
-
                 # ==============================================================================
 # SEGMENT 14 OF 14: UNIFIED AUDIT DISPLAY & HARD HARD-DISK CLV CURVES
 # ==============================================================================
