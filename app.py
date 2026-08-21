@@ -1596,117 +1596,117 @@ with tab_proj:
 
     # ==============================================================================
 # SEGMENT 12 OF 14: GRAPH CABINET EXPANDERS & FPE-EQUIPPED VALUATION SHEET
-# ==============================================================================
-                                with st.expander(" View Matrix Distribution & Probability Trajectory Graphs", expanded=True):
-                    exact_total_goals_distribution = {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, "5+": 0.0}
-                    for h_g in range(max_score_cap):
-                        for a_g in range(max_score_cap):
-                            total_g = h_g + a_g
-                            cell_prob = float(prob_matrix[h_g, a_g])
-                            if total_g in exact_total_goals_distribution: exact_total_goals_distribution[total_g] += cell_prob
-                            else: exact_total_goals_distribution["5+"] += cell_prob
-                    
-                    goals_chart_df = pd.DataFrame({"Match Goals Tiers": [f"Exactly {k} Goals" if isinstance(k, int) else k for k in exact_total_goals_distribution.keys()], "Model Probability (%)": [v * 100 for v in exact_total_goals_distribution.values()]}).set_index("Match Goals Tiers")
-                    st.write(" **Exact Total Match Goals Probability Distribution:**")
-                    st.bar_chart(goals_chart_df, use_container_width=True)
-
-                    st.write(" **Isolated Team Scoring Multi-Bar Probability Distribution Chart:**")
-                    home_individual_goals_prob = [float(np.sum(prob_matrix[g, :])) * 100 for g in range(min(5, max_score_cap))]
-                    away_individual_goals_prob = [float(np.sum(prob_matrix[:, g])) * 100 for g in range(min(5, max_score_cap))]
-                    team_goals_matrix_df = pd.DataFrame({f"Host: {home_target_key} (%)": home_individual_goals_prob, f"Visitor: {away_target_key} (%)": away_individual_goals_prob}, index=[f"Exactly {i} Goals" for i in range(len(home_individual_goals_prob))])
-                    st.bar_chart(team_goals_matrix_df, use_container_width=True)
-
-                    correct_score_flattened_list = []
-                    for h_g in range(min(5, max_score_cap)):
-                        for a_g in range(min(5, max_score_cap)):
-                            correct_score_flattened_list.append({"Scoreline Combo": f"Score: {h_g} - {a_g}", "Probability (%)": float(prob_matrix[h_g, a_g]) * 100})
-                    top_10_scores_df = pd.DataFrame(correct_score_flattened_list).sort_values(by="Probability (%)", ascending=False).head(10).set_index("Scoreline Combo")
-                    st.write(" **Top 10 Most Likely Precise Correct Scores:**")
-                    st.bar_chart(top_10_scores_df, use_container_width=True)
+ # ==============================================================================
+            with st.expander("🔮 View Matrix Distribution & Probability Trajectory Graphs", expanded=True):
+                exact_total_goals_distribution = {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, "5+": 0.0}
+                for h_g in range(max_score_cap):
+                    for a_g in range(max_score_cap):
+                        total_g = h_g + a_g
+                        cell_prob = float(prob_matrix[h_g, a_g])
+                        if total_g in exact_total_goals_distribution: exact_total_goals_distribution[total_g] += cell_prob
+                        else: exact_total_goals_distribution["5+"] += cell_prob
                 
-                st.markdown("---")
-                all_markets_rendered_rows = []
+                goals_chart_df = pd.DataFrame({"Match Goals Tiers": [f"Exactly {k} Goals" if isinstance(k, int) else k for k in exact_total_goals_distribution.keys()], "Model Probability (%)": [v * 100 for v in exact_total_goals_distribution.values()]}).set_index("Match Goals Tiers")
+                st.write("📊 **Exact Total Match Goals Probability Distribution:**")
+                st.bar_chart(goals_chart_df, use_container_width=True)
+
+                st.write("⚽ **Isolated Team Scoring Multi-Bar Probability Distribution Chart:**")
+                home_individual_goals_prob = [float(np.sum(prob_matrix[g, :])) * 100 for g in range(min(5, max_score_cap))]
+                away_individual_goals_prob = [float(np.sum(prob_matrix[:, g])) * 100 for g in range(min(5, max_score_cap))]
+                team_goals_matrix_df = pd.DataFrame({f"Host: {home_target_key} (%)": home_individual_goals_prob, f"Visitor: {away_target_key} (%)": away_individual_goals_prob}, index=[f"Exactly {i} Goals" for i in range(len(home_individual_goals_prob))])
+                st.bar_chart(team_goals_matrix_df, use_container_width=True)
+
+                correct_score_flattened_list = []
+                for h_g in range(min(5, max_score_cap)):
+                    for a_g in range(min(5, max_score_cap)):
+                        correct_score_flattened_list.append({"Scoreline Combo": f"Score: {h_g} - {a_g}", "Probability (%)": float(prob_matrix[h_g, a_g]) * 100})
+                top_10_scores_df = pd.DataFrame(correct_score_flattened_list).sort_values(by="Probability (%)", ascending=False).head(10).set_index("Scoreline Combo")
+                st.write("🔮 **Top 10 Most Likely Precise Correct Scores:**")
+                st.bar_chart(top_10_scores_df, use_container_width=True)
+            
+            st.markdown("---")
+            all_markets_rendered_rows = []
+            
+            # RUNTIME SIMULATION MATRIX
+            mc_runs_pass = 10000
+            mc_lambda_home = float(np.sum(prob_matrix * np.arange(max_score_cap)[:, None]))
+            mc_mu_away = float(np.sum(prob_matrix * np.arange(max_score_cap)[None, :]))
+            simulated_h_goals = np.random.poisson(mc_lambda_home, mc_runs_pass)
+            simulated_a_goals = np.random.poisson(mc_mu_away, mc_runs_pass)
+
+            for label, b_odds, m_prob, risk_tier in raw_matrix_dictionary_build:
+                implied_bk_prob = 1.0 / float(b_odds) if b_odds > 0 else 0.0
+                de_juiced_fair_odds = 1.0 / max(0.001, (implied_bk_prob / bookmaker_market_overround_margin))
                 
-                #  INTERNAL RUNTIME SIMULATION MATRIX
-                mc_runs_pass = 10000
-                mc_lambda_home = float(np.sum(prob_matrix * np.arange(max_score_cap)[:, None]))
-                mc_mu_away = float(np.sum(prob_matrix * np.arange(max_score_cap)[None, :]))
-                simulated_h_goals = np.random.poisson(mc_lambda_home, mc_runs_pass)
-                simulated_a_goals = np.random.poisson(mc_mu_away, mc_runs_pass)
+                # ACCELERATED DYNAMIC MONTE CARLO MAPPING
+                if "HOME WIN" in label: mc_prob_val = float(np.sum(simulated_h_goals > simulated_a_goals) / mc_runs_pass)
+                elif "DRAW MATCH" in label: mc_prob_val = float(np.sum(simulated_h_goals == simulated_a_goals) / mc_runs_pass)
+                elif "AWAY WIN" in label: mc_prob_val = float(np.sum(simulated_h_goals < simulated_a_goals) / mc_runs_pass)
+                elif "OVER 2.5" in label: mc_prob_val = float(np.sum((simulated_h_goals + simulated_a_goals) > 2.5) / mc_runs_pass)
+                elif "UNDER 2.5" in label: mc_prob_val = float(np.sum((simulated_h_goals + simulated_a_goals) <= 2.5) / mc_runs_pass)
+                elif "BOTH TEAMS TO SCORE (YES)" in label: mc_prob_val = float(np.sum((simulated_h_goals > 0) & (simulated_a_goals > 0)) / mc_runs_pass)
+                elif "BOTH TEAMS TO SCORE (NO)" in label: mc_prob_val = float(np.sum((simulated_h_goals == 0) | (simulated_a_goals == 0)) / mc_runs_pass)
+                elif "DRAW NO BET (DNB1)" in label:
+                    dnb1_total = np.sum(simulated_h_goals != simulated_a_goals)
+                    mc_prob_val = float(np.sum(simulated_h_goals > simulated_a_goals) / dnb1_total) if dnb1_total > 0 else 0.50
+                elif "DRAW NO BET (DNB2)" in label:
+                    dnb2_total = np.sum(simulated_h_goals != simulated_a_goals)
+                    mc_prob_val = float(np.sum(simulated_h_goals < simulated_a_goals) / dnb2_total) if dnb2_total > 0 else 0.50
+                elif "HOME TOTAL GOALS OVER 1.5" in label: mc_prob_val = float(np.sum(simulated_h_goals > 1.5) / mc_runs_pass)
+                elif "HOME TOTAL GOALS UNDER 1.5" in label: mc_prob_val = float(np.sum(simulated_h_goals <= 1.5) / mc_runs_pass)
+                elif "AWAY TOTAL GOALS OVER 1.5" in label: mc_prob_val = float(np.sum(simulated_a_goals > 1.5) / mc_runs_pass)
+                elif "AWAY TOTAL GOALS UNDER 1.5" in label: mc_prob_val = float(np.sum(simulated_a_goals <= 1.5) / mc_runs_pass)
+                elif "HOME CLEAN SHEET (YES)" in label: mc_prob_val = float(np.sum(simulated_a_goals == 0) / mc_runs_pass)
+                elif "AWAY CLEAN SHEET (YES)" in label: mc_prob_val = float(np.sum(simulated_h_goals == 0) / mc_runs_pass)
+                elif "DOUBLE CHANCE (1X)" in label: mc_prob_val = float(np.sum(simulated_h_goals >= simulated_a_goals) / mc_runs_pass)
+                elif "DOUBLE CHANCE (X2)" in label: mc_prob_val = float(np.sum(simulated_h_goals <= simulated_a_goals) / mc_runs_pass)
+                elif "DOUBLE CHANCE (12)" in label: mc_prob_val = float(np.sum(simulated_h_goals != simulated_a_goals) / mc_runs_pass)
+                else: mc_prob_val = m_prob
 
-                for label, b_odds, m_prob, risk_tier in raw_matrix_dictionary_build:
-                    implied_bk_prob = 1.0 / float(b_odds) if b_odds > 0 else 0.0
-                    de_juiced_fair_odds = 1.0 / max(0.001, (implied_bk_prob / bookmaker_market_overround_margin))
-                    
-                    #  ACCELERATED DYNAMIC MONTE CARLO MAPPING
-                    if "HOME WIN" in label: mc_prob_val = float(np.sum(simulated_h_goals > simulated_a_goals) / mc_runs_pass)
-                    elif "DRAW MATCH" in label: mc_prob_val = float(np.sum(simulated_h_goals == simulated_a_goals) / mc_runs_pass)
-                    elif "AWAY WIN" in label: mc_prob_val = float(np.sum(simulated_h_goals < simulated_a_goals) / mc_runs_pass)
-                    elif "OVER 2.5" in label: mc_prob_val = float(np.sum((simulated_h_goals + simulated_a_goals) > 2.5) / mc_runs_pass)
-                    elif "UNDER 2.5" in label: mc_prob_val = float(np.sum((simulated_h_goals + simulated_a_goals) <= 2.5) / mc_runs_pass)
-                    elif "BOTH TEAMS TO SCORE (YES)" in label: mc_prob_val = float(np.sum((simulated_h_goals > 0) & (simulated_a_goals > 0)) / mc_runs_pass)
-                    elif "BOTH TEAMS TO SCORE (NO)" in label: mc_prob_val = float(np.sum((simulated_h_goals == 0) | (simulated_a_goals == 0)) / mc_runs_pass)
-                    elif "DRAW NO BET (DNB1)" in label:
-                        dnb1_total = np.sum(simulated_h_goals != simulated_a_goals)
-                        mc_prob_val = float(np.sum(simulated_h_goals > simulated_a_goals) / dnb1_total) if dnb1_total > 0 else 0.50
-                    elif "DRAW NO BET (DNB2)" in label:
-                        dnb2_total = np.sum(simulated_h_goals != simulated_a_goals)
-                        mc_prob_val = float(np.sum(simulated_h_goals < simulated_a_goals) / dnb2_total) if dnb2_total > 0 else 0.50
-                    elif "HOME TOTAL GOALS OVER 1.5" in label: mc_prob_val = float(np.sum(simulated_h_goals > 1.5) / mc_runs_pass)
-                    elif "HOME TOTAL GOALS UNDER 1.5" in label: mc_prob_val = float(np.sum(simulated_h_goals <= 1.5) / mc_runs_pass)
-                    elif "AWAY TOTAL GOALS OVER 1.5" in label: mc_prob_val = float(np.sum(simulated_a_goals > 1.5) / mc_runs_pass)
-                    elif "AWAY TOTAL GOALS UNDER 1.5" in label: mc_prob_val = float(np.sum(simulated_a_goals <= 1.5) / mc_runs_pass)
-                    elif "HOME CLEAN SHEET (YES)" in label: mc_prob_val = float(np.sum(simulated_a_goals == 0) / mc_runs_pass)
-                    elif "AWAY CLEAN SHEET (YES)" in label: mc_prob_val = float(np.sum(simulated_h_goals == 0) / mc_runs_pass)
-                    elif "DOUBLE CHANCE (1X)" in label: mc_prob_val = float(np.sum(simulated_h_goals >= simulated_a_goals) / mc_runs_pass)
-                    elif "DOUBLE CHANCE (X2)" in label: mc_prob_val = float(np.sum(simulated_h_goals <= simulated_a_goals) / mc_runs_pass)
-                    elif "DOUBLE CHANCE (12)" in label: mc_prob_val = float(np.sum(simulated_h_goals != simulated_a_goals) / mc_runs_pass)
-                    else: mc_prob_val = m_prob
-
-                    #  Compute Convergence Percentage & Dual-Engine Edges
-                    variance_gap = abs(m_prob - mc_prob_val) * 100
-                    convergence_score = max(0.0, 100.0 - variance_gap)
-                    
-                    dc_edge = (m_prob * float(b_odds)) - 1.0
-                    mc_edge = (mc_prob_val * float(b_odds)) - 1.0
-                    conservative_edge = min(dc_edge, mc_edge)
-
-                    # Dynamic Convergence Status Flag Anchors
-                    if convergence_score >= 95.0: convergence_flag = f" {convergence_score:.1f}%"
-                    elif 80.0 <= convergence_score < 95.0: convergence_flag = f" {convergence_score:.1f}%"
-                    else: convergence_flag = f" {convergence_score:.1f}%"
-                    
-                    # --- CORE UPGRADE: INDEPENDENT FIELD PENETRATION RE-BALANCER LOOP ---
-                    h_box_density = float(h_s.get("avg_goals_scored", 1.45))
-                    if h_box_density < 1.15 and label == "HOME WIN (1)":
-                        conservative_edge -= 0.04
-                        m_prob *= 0.95
-                    
-                    if conservative_edge >= 0.030:
-                        flag_verdict_label = " ELITE VALUE"
-                        raw_stake_fraction = (conservative_edge / (float(b_odds) - 1.0)) * 0.25
-                        camouflaged_rounded_rand_stake = int(round((float(user_matchday_bankroll_pool) * max(0.01, min(0.05, raw_stake_fraction))) / 10.0) * 10.0)
-                        action_string = f"STRIKE LINE: Stake R{camouflaged_rounded_rand_stake}"
-                    elif 0.000 < conservative_edge < 0.030:
-                        flag_verdict_label = " DE-JUICED EDGE"; action_string = "MONITOR LINES"
-                    else: flag_verdict_label = " HIGH-JUICE TRAP"; action_string = "LOCKOUT TRIGGERED"
-                    
-                    all_markets_rendered_rows.append({
-                        "Betting Market": label, 
-                        "Bookmaker Odds": f"{b_odds:.2f}", 
-                        "De-Juiced Fair Odds": f"{de_juiced_fair_odds:.2f}", 
-                        "Dixon-Coles Prob": f"{m_prob*100:.1f}%", 
-                        "Monte Carlo Prob": f"{mc_prob_val*100:.1f}%", 
-                        "Convergence %": convergence_flag,  #  CONVERGENCE COLUMN ACTIVE
-                        "FPE Rating": f"{h_fpe:.2f}H vs {a_fpe:.2f}A",
-                        "Model Edge (%)": f"{dc_edge*100:+.1f}% (DC) | {mc_edge*100:+.1f}% (MC)", #  DUAL EDGE
-                        "Flag Trigger Status": flag_verdict_label, 
-                        "Recommended Action": action_string, 
-                        "Market Volatility Tier": risk_tier
-                    })
-                st.markdown("####  Complete FPE-Equipped 11-Column Options Valuation Sheet")
-                st.dataframe(pd.DataFrame(all_markets_rendered_rows), use_container_width=True, hide_index=True)
+                # Compute Convergence Percentage & Dual-Engine Edges
+                variance_gap = abs(m_prob - mc_prob_val) * 100
+                convergence_score = max(0.0, 100.0 - variance_gap)
                 
+                dc_edge = (m_prob * float(b_odds)) - 1.0
+                mc_edge = (mc_prob_val * float(b_odds)) - 1.0
+                conservative_edge = min(dc_edge, mc_edge)
+
+                # Dynamic Convergence Status Flag Anchors
+                if convergence_score >= 95.0: convergence_flag = f"🎯 {convergence_score:.1f}%"
+                elif 80.0 <= convergence_score < 95.0: convergence_flag = f"⚖️ {convergence_score:.1f}%"
+                else: convergence_flag = f"⚠️ {convergence_score:.1f}%"
+                
+                # CORE UPGRADE: INDEPENDENT FIELD PENETRATION RE-BALANCER LOOP
+                h_box_density = float(h_s.get("avg_goals_scored", 1.45))
+                if h_box_density < 1.15 and label == "HOME WIN (1)":
+                    conservative_edge -= 0.04
+                    m_prob *= 0.95
+                
+                if conservative_edge >= 0.030:
+                    flag_verdict_label = "🔥 ELITE VALUE"
+                    raw_stake_fraction = (conservative_edge / (float(b_odds) - 1.0)) * 0.25
+                    camouflaged_rounded_rand_stake = int(round((float(user_matchday_bankroll_pool) * max(0.01, min(0.05, raw_stake_fraction))) / 10.0) * 10.0)
+                    action_string = f"STRIKE LINE: Stake R{camouflaged_rounded_rand_stake}"
+                elif 0.000 < conservative_edge < 0.030:
+                    flag_verdict_label = "🟢 DE-JUICED EDGE"; action_string = "MONITOR LINES"
+                else: flag_verdict_label = "⚠️ HIGH-JUICE TRAP"; action_string = "LOCKOUT TRIGGERED"
+                
+                all_markets_rendered_rows.append({
+                    "Betting Market": label, 
+                    "Bookmaker Odds": f"{b_odds:.2f}", 
+                    "De-Juiced Fair Odds": f"{de_juiced_fair_odds:.2f}", 
+                    "Dixon-Coles Prob": f"{m_prob*100:.1f}%", 
+                    "Monte Carlo Prob": f"{mc_prob_val*100:.1f}%", 
+                    "Convergence %": convergence_flag,  # CONVERGENCE COLUMN ACTIVE
+                    "FPE Rating": f"{h_fpe:.2f}H vs {a_fpe:.2f}A",
+                    "Model Edge (%)": f"{dc_edge*100:+.1f}% (DC) | {mc_edge*100:+.1f}% (MC)", # DUAL EDGE
+                    "Flag Trigger Status": flag_verdict_label, 
+                    "Recommended Action": action_string, 
+                    "Market Volatility Tier": risk_tier
+                })
+            st.markdown("#### 🎫 Complete FPE-Equipped 11-Column Options Valuation Sheet")
+            st.dataframe(pd.DataFrame(all_markets_rendered_rows), use_container_width=True, hide_index=True)
+                    
             # ==============================================================================
 # SEGMENT 13 OF 14: DOUBLE LEADERBOARDS & DYNAMIC 10,000 SEASON OUTRIGHTS
 # ==============================================================================
