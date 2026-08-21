@@ -1860,11 +1860,17 @@ with tab_standings:
         final_ledger_df = pd.DataFrame(outright_rendered_payload)
         
         # Render the finalized 7-column chart table live on your display screen pane view
-        st.dataframe(
-            final_ledger_df.sort_values(by="Model Win Probability (%)", ascending=False), 
-            use_container_width=True, 
-            hide_index=True
+        
+                    # 🟢 LINE 1864 FIXED: Check if the table has data, then sort dynamically by position to avoid text spelling keys crashing
+        if not final_ledger_df.empty:
+            st.dataframe(
+                final_ledger_df.sort_values(by=final_ledger_df.columns[1], ascending=False), 
+                use_container_width=True, 
+                hide_index=True
             )
+        else:
+            st.dataframe(final_ledger_df, use_container_width=True, hide_index=True)
+    
             
                 # ==============================================================================
 # SEGMENT 14 OF 14: UNIFIED AUDIT DISPLAY & HARD HARD-DISK CLV CURVES
