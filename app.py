@@ -1710,47 +1710,6 @@ with tab_proj:
             # ==============================================================================
 # SEGMENT 13 OF 14: DOUBLE LEADERBOARDS & DYNAMIC 10,000 SEASON OUTRIGHTS
 # ==============================================================================
-with tab_standings:
-    st.markdown("### ðŸ“Š Live League Standings Pressure & Expected Points (xPts)")
-    if not filtered_df.empty:
-        st.info("âš½ Double Standings Active: Running 10,000 Multi-Variate match simulations strictly from CSV rows...")
-        xpts_rows = []
-        team_simulation_profiles = {}
-        
-        for team in sorted(all_teams_raw):
-            t_past = settled_past_games[(settled_past_games["home_team"] == team) | (settled_past_games["away_team"] == team)]
-            real_wins, real_draws, real_losses, real_points = 0, 0, 0, 0
-            for idx, r in t_past.iterrows():
-                is_h = r["home_team"] == team
-                h_g = float(r.get("home_goals", 0)) if pd.notna(r.get("home_goals")) else 0.0
-                a_g = float(r.get("away_goals", 0)) if pd.notna(r.get("away_goals")) else 0.0
-                if h_g == a_g: real_draws += 1; real_points += 1
-                elif (h_g > a_g and is_h) or (a_g > h_g and not is_h): real_wins += 1; real_points += 3
-                else: real_losses += 1
-            
-            team_simulation_profiles[team] = {
-                "base_points": real_points,
-                "att_vector": float(h_s.get("avg_goals_scored", 1.45)) + (t_past["home_box_touches"].mean() * 0.01 if not t_past.empty else 0.15),
-                "sim_wins": 0
-            }
-            
-            simulated_xpts_accumulator = 0.0
-            for idx, r in t_past.iterrows():
-                is_home = r["home_team"] == team
-                h_xG = (float(r.get("home_big_chances", 1.0)) * automatically_tuned_bc_weight) + (float(r.get("home_sot", 4.0)) * automatically_tuned_sot_weight) + (float(r.get("home_box_touches", 15.0)) * 0.015)
-                a_xG = (float(r.get("away_big_chances", 1.0)) * automatically_tuned_bc_weight) + (float(r.get("away_sot", 3.5)) * automatically_tuned_sot_weight) + (float(r.get("away_box_touches", 12.0)) * 0.015)
-                
-                p_matrix = engine.generate_bivariate_probability_matrix(h_xG * (automatically_tuned_hfa_factor if is_home else 1.0), a_xG, max_score_cap)
-                p_h = float(np.sum(np.tril(p_matrix, -1)))
-                p_draw_cell = float(np.sum(np.diag(p_matrix)))
-                p_away_cell = float(np.sum(np.triu(p_matrix, 1)))
-                p_denom = p_h + p_draw_cell + p_away_cell
-                if p_denom > 0: p_h /= p_denom; p_draw_cell /= p_denom; p_away_cell /= p_denom
-                if is_home: simulated_xpts_accumulator += (p_h * 3.0) + (p_draw_cell * 1.0)
-                else: simulated_xpts_accumulator += (p_away_cell * 3.0) + (p_draw_cell * 1.0)
-            
-            xpts_rows.append({"Squad Team": team, "P": len(t_past), "W": real_wins, "D": real_draws, "L": real_losses, "Actual Points": real_points, "Deserved Points (xPts)": round(simulated_xpts_accumulator, 2), "Value Delta (Real - xPts)": round(real_points - simulated_xpts_accumulator, 2)})
-        st.dataframe(pd.DataFrame(xpts_rows).sort_values(by="Deserved Points (xPts)", ascending=False), use_container_width=True, hide_index=True)
 
         st.markdown("##### ðŸ”® 10,000 Monte Carlo Outright Championship Forecast Simulator")
         num_simulations_pass = 10000
@@ -1771,65 +1730,63 @@ with tab_standings:
             # ==============================================================================
 # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID & UPGRADED LEDGER
 # ==============================================================================
-st.markdown("---")
-st.header(" Divisional Outright Mass Entry Deck")
-st.markdown("Type in the live outright odds from Hollywoodbets or Easybet for all teams simultaneously to refresh your ledger matrix.")
+        # ==============================================================================
+        # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID (ST.SESSION_STATE LOCKED)
+        # ==============================================================================
+        st.markdown("---")
+        st.header("🏆 Divisional Outright Mass Entry Deck")
+        st.markdown("Type in the live outright odds from Hollywoodbets or Easybet for all teams simultaneously to refresh your ledger matrix.")
 
-# Step 1: Initialize a persistent dictionary memory cache for all team wagers safely
-if "global_outright_odds_shelf" not in match_state:
-    match_state["global_outright_odds_shelf"] = {team: 10.00 for team in all_teams_raw}
+        # Step 1: Initialize a persistent dictionary memory cache directly inside core memory banks
+        if "global_outright_odds_shelf" not in st.session_state:
+            st.session_state["global_outright_odds_shelf"] = {team: 10.00 for team in all_teams_raw}
 
-# Step 2: Build a clean, multi-column entry deck that updates all at once
-mass_entry_columns = st.columns(3)  # Arranges entry boxes into 3 scannable rows
-for idx, team in enumerate(sorted(all_teams_raw)):
-    target_col = mass_entry_columns[idx % 3]
-    with target_col:
-        # Pre-populate with saved data or clean baseline anchors safely
-        saved_val = float(match_state["global_outright_odds_shelf"].get(team, 10.00))
-        match_state["global_outright_odds_shelf"][team] = st.number_input(
-            f"Odds: {team}",
-            min_value=1.01,
-            value=saved_val,
-            step=1.00,
-            key=f"mass_out_odds_input_{team.replace(' ', '_')}"
-        )
+        # Step 2: Build a clean, multi-column entry deck that updates all at once
+        mass_entry_columns = st.columns(3)  # Arranges entry boxes into 3 scannable rows
+        for idx, team in enumerate(sorted(all_teams_raw)):
+            target_col = mass_entry_columns[idx % 3]
+            with target_col:
+                # 🟢 PERFECT ALIGNMENT: 16 spaces deep using core session memory
+                saved_val = float(st.session_state["global_outright_odds_shelf"].get(team, 10.00))
+                st.session_state["global_outright_odds_shelf"][team] = st.number_input(
+                    f"Odds: {team}",
+                    min_value=1.01,
+                    value=saved_val,
+                    step=1.00,
+                    key=f"mass_out_odds_input_{team.replace(' ', '_')}"
+                )
 
-# Step 3: Compile the Upgraded 6-Column Outright Value Ledger Grid
-st.markdown("#####  Integrated 10,000-Iteration Outright Value Ledger")
+        # Step 3: Compile the Upgraded 6-Column Outright Value Ledger Grid
+        st.markdown("##### 📊 Integrated 10,000-Iteration Outright Value Ledger")
 
-outright_ledger_payload = []
-for team in sorted(all_teams_raw):
-    # Pull true probability directly from your 10,000-iteration mock standings tracker
-    final_win_probability = simulated_championship_tally[team] / num_simulations_pass
-    clamped_prob = max(0.001, final_win_probability)
-    fair_zero_margin_odds = 1.0 / clamped_prob
-    
-    #  REAL-TIME SYNC: Reads your mass text inputs for every team all at once!
-    live_bookie_odds = float(match_state["global_outright_odds_shelf"].get(team, fair_zero_margin_odds))
-    
-    #  Compute Model Edge % for Outrights natively
-    outright_expected_value = (clamped_prob * live_bookie_odds) - 1.0
-    
-    outright_ledger_payload.append({
-        "Competing Squad": team,
-        "Model Win Probability (%)": f"{final_win_probability * 100:.1f}%",
-        "Fair Value Odds Line": f"{fair_zero_margin_odds:.2f}",
-        "Sportsbook Outright Odds": f"{live_bookie_odds:.2f}",
-        "Model Edge (%)": f"{outright_expected_value * 100:+.1f}%",  #  NEW COLUMN LAYER ACTIVE
-        "Trading Outright Verdict": " FUTURES ALPHA" if outright_expected_value >= 0.05 else (" TRAP / FADE" if outright_expected_value <= -0.05 else " EFFICIENT HOLD")
-    })
+        outright_ledger_payload = []
+        for team in sorted(all_teams_raw):
+            final_win_probability = simulated_championship_tally[team] / num_simulations_pass
+            clamped_prob = max(0.001, final_win_probability)
+            fair_zero_margin_odds = 1.0 / clamped_prob
+            
+            # 🟢 SYNCHRONIZED CORE MEMORY LOOKUP PASS
+            live_bookie_odds = float(st.session_state["global_outright_odds_shelf"].get(team, fair_zero_margin_odds))
+            outright_expected_value = (clamped_prob * live_bookie_odds) - 1.0
+            
+            outright_ledger_payload.append({
+                "Competing Squad": team,
+                "Model Win Probability (%)": f"{final_win_probability * 100:.1f}%",
+                "Fair Value Odds Line": f"{fair_zero_margin_odds:.2f}",
+                "Sportsbook Outright Odds": f"{live_bookie_odds:.2f}",
+                "Model Edge (%)": f"{outright_expected_value * 100:+.1f}%",
+                "Trading Outright Verdict": "🔥 FUTURES ALPHA" if outright_expected_value >= 0.05 else ("🛑 TRAP / FADE" if outright_expected_value <= -0.05 else "🔷 EFFICIENT HOLD")
+            })
 
-# Convert your dictionary database records array cleanly into an automated tracking dataframe grid
-outright_master_df = pd.DataFrame(outright_ledger_payload)
+        outright_master_df = pd.DataFrame(outright_ledger_payload)
 
-# Render the finalized 6-column chart table live on your display screen pane view
-st.dataframe(
-    outright_master_df.sort_values(by="Model Win Probability (%)", ascending=False),
-    use_container_width=True,
-    hide_index=True
-)
-
-          
+        # Render the finalized 6-column chart table live on your display screen pane view
+        st.dataframe(
+            outright_master_df.sort_values(by="Model Win Probability (%)", ascending=False),
+            use_container_width=True,
+            hide_index=True
+            )
+            
                 # ==============================================================================
 # SEGMENT 14 OF 14: UNIFIED AUDIT DISPLAY & HARD HARD-DISK CLV CURVES
 # ==============================================================================
