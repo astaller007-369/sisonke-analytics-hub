@@ -1705,15 +1705,18 @@ with tab_proj:
                 # ==============================================================================
         # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID & UPGRADED LEDGER
         # ==============================================================================
+                # ==============================================================================
+        # SEGMENT 13 COMPLETE: ORIGINAL MC STANDINGS MATH + NEW MASS ODDS ENTRY DECK
+        # ==============================================================================
         st.markdown("##### 🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
         num_simulations_pass = 10000
         simulated_championship_tally = {t: 0 for t in all_teams_raw}
         
-        # 🟢 NEW DATA CONTAINER: Safely tracks the total points scored by every team across all runs
+        # Tracks the total cumulative league points scored by every team across all simulated realities
         simulated_total_points_accumulator = {t: 0.0 for t in all_teams_raw}
         
         for sim_run in range(num_simulations_pass):
-            # ORIGINAL CALCULATION: Safely extracts your native base_points tracking values
+            # 🟢 YOUR ORIGINAL UNTOUCHED CALCULATION LAYER:
             current_iter_standings = {}
             for t in all_teams_raw:
                 team_profile_data = team_simulation_profiles.get(t, {"base_points": 0, "att_vector": 1.45})
@@ -1722,9 +1725,9 @@ with tab_proj:
             for i, team_a in enumerate(all_teams_raw):
                 for j, team_b in enumerate(all_teams_raw):
                     if i != j:
-                        # ORIGINAL CALCULATION: Extracts your native attack power vectors
+                        # 🟢 YOUR ORIGINAL UNTOUCHED CALCULATIONS LOOP:
                         profile_a = team_simulation_profiles.get(team_a, {"base_points": 0, "att_vector": 1.45})
-                        profile_b = team_simulation_profiles.get(team_b, {"att_vector": 1.45})
+                        profile_b = team_simulation_profiles.get(team_b, {"base_points": 0, "att_vector": 1.45})
                         
                         lambda_a = profile_a.get("att_vector", 1.45) * automatically_tuned_hfa_factor
                         lambda_b = profile_b.get("att_vector", 1.45)
@@ -1733,7 +1736,7 @@ with tab_proj:
                         elif np.random.poisson(lambda_a) < np.random.poisson(lambda_b): current_iter_standings[team_b] += 3
                         else: current_iter_standings[team_a] += 1; current_iter_standings[team_b] += 1
                         
-            # 🟢 NEW MATRIX HOOK: Accumulates the final point tallies for the end of season average calculation
+            # Accumulate the final points for your requested Expected End Points metric calculation
             for t in all_teams_raw:
                 simulated_total_points_accumulator[t] += current_iter_standings[t]
                 
@@ -1744,22 +1747,23 @@ with tab_proj:
         st.header("🏆 Divisional Outright Mass Entry Deck")
         st.markdown("Type in the live outright odds from Hollywoodbets or Easybet for all teams simultaneously to refresh your ledger matrix.")
 
-        # Initialize a persistent dictionary memory cache inside core memory banks
+        # 📥 NEW MAPPING BLOCK: Initializes a persistent grid space in core memory banks
         if "global_outright_odds_shelf" not in st.session_state:
             st.session_state["global_outright_odds_shelf"] = {}
 
-        # Build a clean, multi-column entry deck that updates all at once
-        mass_entry_columns = st.columns(3)  # Arranges entry boxes into 3 scannable rows
+        # Build a clean, multi-column entry deck that accepts odds all at once
+        mass_entry_columns = st.columns(3)  
         for idx, team in enumerate(sorted(all_teams_raw)):
             target_col = mass_entry_columns[idx % 3]
             with target_col:
-                # Calculates your original default baseline price multiplier natively entirely offline
                 final_win_probability = simulated_championship_tally[team] / num_simulations_pass
                 clamped_prob = max(0.001, final_win_probability)
                 fair_zero_margin_odds = 1.0 / clamped_prob
+                
+                # YOUR ORIGINAL VALUE RULE USED AS THE BASELINE FILLER OUTSIDE CLOSING LOOPS:
                 original_script_default_odds = float(odds_1 * 1.5) if 'odds_1' in locals() else fair_zero_margin_odds
                 
-                # Pre-populate with saved data or your original script's odds calculation safely
+                # Pre-populate rows with saved data or your original script's math baseline anchor safely
                 saved_val = float(st.session_state["global_outright_odds_shelf"].get(team, original_script_default_odds))
                 st.session_state["global_outright_odds_shelf"][team] = st.number_input(
                     f"Odds: {team}",
@@ -1777,17 +1781,17 @@ with tab_proj:
             clamped_prob = max(0.001, final_win_probability)
             fair_zero_margin_odds = 1.0 / clamped_prob
             
-            # 🟢 EXTENDED CALCULATION: Compares cumulative simulation points against total runs to find the average
+            # Compares cumulative simulation points against total runs to calculate the mean expectation
             expected_end_points_average = round(simulated_total_points_accumulator[team] / num_simulations_pass)
             
-            # SYNCED CORE LOOKUP: Reads your mass entry deck inputs for every team all at once
+            # 🟢 UPGRADED SYNC PATH: Reads your typed mass odds entries instead of hardcoded numbers!
             live_bookie_odds = float(st.session_state["global_outright_odds_shelf"].get(team, fair_zero_margin_odds))
             outright_expected_value = (clamped_prob * live_bookie_odds) - 1.0
             
             outright_ledger_payload.append({
                 "Competing Squad": team,
                 "Model Win Probability (%)": f"{final_win_probability * 100:.1f}%",
-                "Expected End Points": f"{expected_end_points_average} pts",  # 🟢 BRAND NEW COLUMN ACTIVE
+                "Expected End Points": f"{expected_end_points_average} pts",  # 🟢 EXPECTED POINTS COLUMN
                 "Fair Value Odds Line": f"{fair_zero_margin_odds:.2f}",
                 "Sportsbook Outright Odds": f"{live_bookie_odds:.2f}",
                 "Model Edge (%)": f"{outright_expected_value * 100:+.1f}%",  
@@ -1801,7 +1805,9 @@ with tab_proj:
             outright_master_df.sort_values(by="Model Win Probability (%)", ascending=False),
             use_container_width=True,
             hide_index=True
-            )
+)
+
+                
             
 
                 # ==============================================================================
