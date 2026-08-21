@@ -199,7 +199,7 @@ def fetch_thestatsapi_to_sisonke(league_id, target_seasons):
     )
     upcoming_three_month_df = raw_master_df[future_fixtures_mask]
     
-    # ðŸ“Š STAGE 4: COLLAPSE BLOCKS INTO A SINGLE REPAIRED DATA TIMELINE
+    # STAGE 4: COLLAPSE BLOCKS INTO A SINGLE REPAIRED DATA TIMELINE
     final_sanitized_pipeline_df = pd.concat([historical_settled_df, upcoming_three_month_df], ignore_index=True)
     
     # Sort chronologically to preserve your time-decay half-life math sequence
@@ -226,7 +226,7 @@ def fetch_thestatsapi_to_sisonke(league_id, target_seasons):
     current_date = datetime.date.today()
     ninety_days_future = current_date + datetime.timedelta(days=90)
     
-    # ðŸ›‘ MAKE SURE YOUR REAL TOKEN IS SAFELY LOCKED INSIDE THESE QUOTES:
+    
     api_token = "fapi_MSr9G4BWrzxnDEoDGaUEHOoX82FsjIE3" 
     headers = {
         "Authorization": f"Bearer {api_token}",
@@ -243,7 +243,7 @@ def fetch_thestatsapi_to_sisonke(league_id, target_seasons):
         # ==============================================================================
 # LINE 223 TRANSLATION FIX: SYNCHRONIZING VARIABLE LABELS
 # ==============================================================================
-        # ðŸŸ¢ THE FIXED LINE (Changes active_api_id to league_id and year to season):
+        
         endpoint_url = f"{sisonke_front_gate}/api/football/teams/{league_id}/matches?season={season}"
 
         
@@ -737,21 +737,15 @@ if active_app_tab == "ðŸ“ Research & Sentiment Tracker":
         
 
 
-# ==============================================================================
-# YOUR ORIGINAL 43-LEAGUE PREDICTIVE MODEL CONSOLE STARTS NATIVELY BELOW HERE!
-# ==============================================================================
 
 
-st.sidebar.title("ðŸ§  SISONKE CONTROL PANEL")
 
-# ==============================================================================
-# SEGMENT 4 REVISED: NEW 40-LEAGUE GLOBAL WORKSPACE DIRECTORY
-# ==============================================================================
-    # ðŸŸ¢ Fully balanced keyset: 11 categories removed, 9 new expansions active.
 # ==============================================================================
 # SEGMENT 4 FINALIZED: CONFIGURED 4-DIGIT WORKSPACE DIRECTORY
 # ==============================================================================
 # ðŸŸ¢ Every league index has been updated to match the official 4-digit layout!
+st.sidebar.title("ðŸ§  SISONKE CONTROL PANEL")
+
 league_directory = {
     "England Championship": 1040, 
     "Germany 2. Bundesliga": 1079, 
@@ -1711,23 +1705,48 @@ with tab_proj:
 # SEGMENT 13 OF 14: DOUBLE LEADERBOARDS & DYNAMIC 10,000 SEASON OUTRIGHTS
 # ==============================================================================
 
-        st.markdown("##### ðŸ”® 10,000 Monte Carlo Outright Championship Forecast Simulator")
+        
+                # ==============================================================================
+        # 🔮 10,000 MONTE CARLO OUTRIGHT CHAMPIONSHIP FORECAST SIMULATOR (REPAIRED)
+        # ==============================================================================
+        st.markdown("---")
+        st.subheader("🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
         num_simulations_pass = 10000
         simulated_championship_tally = {t: 0 for t in all_teams_raw}
-        for sim_run in range(num_simulations_pass):
-                        # 🟢 LINE 1718 FIXED: Grounding the seasonal simulation baseline to 0 points
-            current_iter_standings = {t: 0 for t in all_teams_raw}
 
+        # Run 10,000 complete season simulations natively entirely offline
+        for sim_run in range(num_simulations_pass):
+            # Grounding the seasonal simulation baseline to 0 points safely
+            current_iter_standings = {t: 0 for t in all_teams_raw}
+            
             for i, team_a in enumerate(all_teams_raw):
                 for j, team_b in enumerate(all_teams_raw):
                     if i != j:
-                        lambda_a = team_simulation_profiles[team_a]["att_vector"] * automatically_tuned_hfa_factor
-                        lambda_b = team_simulation_profiles[team_b]["att_vector"]
-                        if np.random.poisson(lambda_a) > np.random.poisson(lambda_b): current_iter_standings[team_a] += 3
-                        elif np.random.poisson(lambda_a) < np.random.poisson(lambda_b): current_iter_standings[team_b] += 3
-                        else: current_iter_standings[team_a] += 1; current_iter_standings[team_b] += 1
+                        # 🟢 PROMOTED TEAM SAFETY FALLBACK:
+                        # If a team is newly promoted and missing from your profiles, 
+                        # give them a safe fallback baseline of 1.0 instead of crashing!
+                        profile_a = team_simulation_profiles.get(team_a, {"att_vector": 1.0, "def_vector": 1.0})
+                        profile_b = team_simulation_profiles.get(team_b, {"att_vector": 1.0, "def_vector": 1.0})
+                        
+                        lambda_a = float(profile_a.get("att_vector", 1.0)) * automatically_tuned_hfa_factor
+                        lambda_b = float(profile_b.get("att_vector", 1.0))
+                        
+                        # Roll the poisson dice for both teams to compute match points allocation
+                        goals_a = np.random.poisson(lambda_a)
+                        goals_b = np.random.poisson(lambda_b)
+                        
+                        if goals_a > goals_b: 
+                            current_iter_standings[team_a] += 3
+                        elif goals_a < goals_b: 
+                            current_iter_standings[team_b] += 3
+                        else: 
+                            current_iter_standings[team_a] += 1
+                            current_iter_standings[team_b] += 1
+                            
+            # Crown the champion for this simulated reality run
             winner_squad = max(current_iter_standings, key=current_iter_standings.get)
             simulated_championship_tally[winner_squad] += 1
+
             
             # ==============================================================================
 # SEGMENT 13 CORE UPDATE: MASS OUTRIGHT ODDS ENTRY GRID & UPGRADED LEDGER
