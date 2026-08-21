@@ -1795,8 +1795,11 @@ with tab_standings:
             for t in all_teams_raw:
                 simulated_total_points_accumulator[t] += current_iter_standings[t]
                 
-            winner_squad = max(current_iter_standings, key=current_iter_standings.get)
-            simulated_championship_tally[winner_squad] += 1
+                        # 🟢 LINE 1798 FIXED: Added a safety fallback so max() never handles an empty standings dictionary
+            if current_iter_standings:
+                winner_squad = max(current_iter_standings, key=current_iter_standings.get)
+                simulated_championship_tally[winner_squad] += 1
+
             
         st.markdown("---")
         st.header("🏆 Divisional Outright Mass Entry Deck")
