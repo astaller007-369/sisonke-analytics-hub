@@ -1706,8 +1706,9 @@ with tab_proj:
 # ==============================================================================
 
         
+                
                 # ==============================================================================
-        # 🔮 10,000 MONTE CARLO OUTRIGHT CHAMPIONSHIP FORECAST SIMULATOR (REPAIRED)
+        # 🔮 10,000 MONTE CARLO MATCH FORECAST SIMULATOR (CONNECTED TO FUNCTION BASES)
         # ==============================================================================
         st.markdown("---")
         st.subheader("🔮 10,000 Monte Carlo Outright Championship Forecast Simulator")
@@ -1716,18 +1717,21 @@ with tab_proj:
 
         # Run 10,000 complete season simulations natively entirely offline
         for sim_run in range(num_simulations_pass):
+            # Grounding the seasonal simulation baseline to 0 points safely
             current_iter_standings = {t: 0 for t in all_teams_raw}
             
             for i, team_a in enumerate(all_teams_raw):
                 for j, team_b in enumerate(all_teams_raw):
                     if i != j:
-                        # 🟢 PASTED RIGHT HERE: Your verified main dictionary lookup code layers!
-                        profile_a = team_simulation_profiles.get(team_a, {"att_vector": 1.0, "def_vector": 1.0})
-                        profile_b = team_simulation_profiles.get(team_b, {"att_vector": 1.0, "def_vector": 1.0})
+                        # 🟢 PERFECT ALIGNMENT: Uses your active function parameters directly!
+                        # Falls back to an even 1.0 base value if a generic squad is checked
+                        att_a = float(h_att) if team_a == home_target_key else 1.0
+                        att_b = float(a_att) if team_b == away_target_key else 1.0
                         
-                        lambda_a = float(profile_a.get("att_vector", 1.0)) * automatically_tuned_hfa_factor
-                        lambda_b = float(profile_b.get("att_vector", 1.0))
+                        lambda_a = att_a * automatically_tuned_hfa_factor
+                        lambda_b = att_b
                         
+                        # Roll the poisson dice for both teams to compute match points allocation
                         goals_a = np.random.poisson(lambda_a)
                         goals_b = np.random.poisson(lambda_b)
                         
@@ -1739,8 +1743,10 @@ with tab_proj:
                             current_iter_standings[team_a] += 1
                             current_iter_standings[team_b] += 1
                             
+            # Crown the champion for this simulated reality run
             winner_squad = max(current_iter_standings, key=current_iter_standings.get)
             simulated_championship_tally[winner_squad] += 1
+        
         
 
             
