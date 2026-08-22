@@ -498,7 +498,7 @@ elif active_app_tab_selection == "📊 Predictive Analytics Hub":
     # --- STAGE 2: INTERACTIVE DROPDOWNS CORE ---
     col_l, col_f = st.columns(2)
     with col_l:
-        selected_league = st.selectbox("Active Division Workspace:", options=available_leagues, key="chk_leag_sel")
+        selected_league = st.selectbox("Active Division Workspace:", options=available_leagues, key="chk_leag_sel_backup")
         
     upcoming_fixtures_list = []
     if not master_db_df.empty and "status" in master_db_df.columns and "league" in master_db_df.columns:
