@@ -540,8 +540,8 @@ with check_col:
     # ==============================================================================
     with tracking_col:
     # 🟢 PERFECT ALIGNMENT: Pushed right by 4 spaces to match your check_col sibling layer!
-    st.header("📈 Multi-Day Multi-Market Intercept Tracker")
-    st.markdown("Log market price adjustments across all 22 derivative lines and 4 tracking days to detect sharp money flows.")
+        st.header("📈 Multi-Day Multi-Market Intercept Tracker")
+        st.markdown("Log market price adjustments across all 22 derivative lines and 4 tracking days to detect sharp money flows.")
     
     # 👥 STEP 1: PARSER FOR NAKED TEAM NAMES
     if " vs " in str(target_fixture):
