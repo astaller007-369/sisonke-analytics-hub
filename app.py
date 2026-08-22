@@ -375,6 +375,20 @@ st.sidebar.markdown("---")
 st.sidebar.title("🧠 SISONKE CONTROL PANEL")
 st.sidebar.markdown("---")
 
+# ==============================================================================
+# 🟢 SIDEBAR REGULAR NAVIGATION LAYER: CHANNELS WORKSPACES CLEANLY WITH NO KILLS
+# ==============================================================================
+st.sidebar.title("🧠 SISONKE CONTROL PANEL")
+
+# Renders the interactive panel selector directly onto your sidebar dashboard panel
+active_app_tab_selection = st.sidebar.radio(
+    "Select Active Console Workspace Panel:",
+    options=["📊 Predictive Analytics Hub", "📌 Research & Sentiment Tracker"],
+    key="sisonke_platform_navigation_radio_v2026_unlocked_final"
+)
+st.sidebar.markdown("---")
+
+
 # 🟢 FIXED ALIGNMENT: Pulled flush left (0 empty spaces) to match your root script column layer!
 checklist_save_path = "sisonke_checklist_storage.json"
 database_csv_path = "master_sisonke_database.csv"
@@ -387,6 +401,22 @@ if os.path.exists(checklist_save_path):
     except Exception:
         pass
 
+# --- TRACKER SCREEN HOUSING ---
+if active_app_tab_selection == "📌 Research & Sentiment Tracker":
+    st.subheader("📌 Sisonke Automated Research & Sentiment Desk")
+    st.markdown("---")
+    # Your parallel checklist and 4-day radar matrix scripts run safely inside here...
+
+elif active_app_tab_selection == "📊 Predictive Analytics Hub":
+    # Your 5 main dashboard tabs (tab_proj, tab_standings, etc.) run safely inside here...
+    tab_proj, tab_standings, tab_history, tab_past, tab_research = st.tabs([
+        "🔮 ACTIVE PROJECTIONS MATRIX", 
+        "📋 COMPETITION STANDINGS", 
+        "📉 PERFORMANCE BACKTESTER", 
+        "📜 HISTORICAL RESULT LEDGER",
+        "📌 QUICK RESEARCH HUB"
+    ])
+    
             
     available_leagues = ["No Active Database Connected"]
     master_db_df = pd.DataFrame()
