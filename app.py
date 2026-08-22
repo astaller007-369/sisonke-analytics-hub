@@ -521,37 +521,32 @@ check_col, tracking_col = st.columns([1.1, 0.9])
 with check_col:
     st.header("⏳ 7-Day Context Checklist")
     st.markdown("#### 📅 7 Days Out")
-    match_state["checklist"]["c1"] = st.checkbox("Check fixture congestion (3 games in 7 days?)", value=match_state["checklist"]["c1"], key="cb1")
-    
-    check_col, tracking_col = st.columns([1.1, 0.9])
-with check_col:
-    # 🟢 FIXED ALIGNMENT: Pushed 4 spaces right to sit inside your column container cleanly!
-    st.header("⏳ 7-Day Context Checklist")
-    st.markdown("#### 📅 7 Days Out")
-    match_state["checklist"]["c1"] = st.checkbox("Check fixture congestion (3 games in 7 days?)", value=match_state["checklist"]["c1"], key="cb1")
-    match_state["checklist"]["c2"] = st.checkbox("European/Cup games midweek?", value=match_state["checklist"]["c2"], key="cb2")
-    match_state["checklist"]["c3"] = st.checkbox("Review H2H last 5 meetings", value=match_state["checklist"]["c3"], key="cb3")
+    match_state["checklist"]["c1"] = st.checkbox("Check fixture congestion (3 games in 7 days?)", value=match_state["checklist"]["c1"], key="cb1_ctx_chk")
+    match_state["checklist"]["c2"] = st.checkbox("European/Cup games midweek?", value=match_state["checklist"]["c2"], key="cb2_ctx_chk")
+    match_state["checklist"]["c3"] = st.checkbox("Review H2H last 5 meetings", value=match_state["checklist"]["c3"], key="cb3_ctx_chk")
     
     st.markdown("#### 📰 72 Hours Out")
-    match_state["checklist"]["c4"] = st.checkbox("Watch manager press conferences", value=match_state["checklist"]["c4"], key="cb4")
-    match_state["checklist"]["c5"] = st.checkbox("Check injury reports & suspensions", value=match_state["checklist"]["c5"], key="cb5")
-    match_state["checklist"]["c6"] = st.checkbox("Note any rotation hints", value=match_state["checklist"]["c6"], key="cb6")
+    match_state["checklist"]["c4"] = st.checkbox("Watch manager press conferences", value=match_state["checklist"]["c4"], key="cb4_ctx_chk")
+    match_state["checklist"]["c5"] = st.checkbox("Check injury reports & suspensions", value=match_state["checklist"]["c5"], key="cb5_ctx_chk")
+    match_state["checklist"]["c6"] = st.checkbox("Note any rotation hints", value=match_state["checklist"]["c6"], key="cb6_ctx_chk")
     
     st.markdown("#### 🕵️ 24 Hours Out")
-    match_state["checklist"]["c7"] = st.checkbox("Review training photos/videos", value=match_state["checklist"]["c7"], key="cb7")
-    match_state["checklist"]["c8"] = st.checkbox("Check team travel distance factors", value=match_state["checklist"]["c8"], key="cb8")
-    match_state["checklist"]["c9"] = st.checkbox("Weather forecast verification completed", value=match_state["checklist"]["c9"], key="cb9")
-    match_state["checklist"]["c10"] = st.checkbox("Compare lines across 3+ sportsbooks", value=match_state["checklist"]["c10"], key="cb10")
+    match_state["checklist"]["c7"] = st.checkbox("Review training photos/videos", value=match_state["checklist"]["c7"], key="cb7_ctx_chk")
+    match_state["checklist"]["c8"] = st.checkbox("Check team travel distance factors", value=match_state["checklist"]["c8"], key="cb8_ctx_chk")
+    match_state["checklist"]["c9"] = st.checkbox("Weather forecast verification completed", value=match_state["checklist"]["c9"], key="cb9_ctx_chk")
+    match_state["checklist"]["c10"] = st.checkbox("Compare lines across 3+ sportsbooks", value=match_state["checklist"]["c10"], key="cb10_ctx_chk")
     
     st.markdown("#### ⚡ Match Day & Lineups Release")
-    match_state["checklist"]["c11"] = st.checkbox("Final injury report checks completed", value=match_state["checklist"]["c11"], key="cb11")
-    match_state["checklist"]["c12"] = st.checkbox("Check early line news leaks", value=match_state["checklist"]["c12"], key="cb12")
-    match_state["checklist"]["c13"] = st.checkbox("Monitor odds movements sheets", value=match_state["checklist"]["c13"], key="cb13")
-    match_state["checklist"]["c14"] = st.checkbox("Official lineups released (60 Mins Out)", value=match_state["checklist"]["c14"], key="cb14")
-    match_state["checklist"]["c15"] = st.checkbox("Formation/tactical setup verified", value=match_state["checklist"]["c15"], key="cb15")
-    match_state["checklist"]["c16"] = st.checkbox("Key rotation players in/out accounted for", value=match_state["checklist"]["c16"], key="cb16")
-    match_state["checklist"]["c17"] = st.checkbox("Final bet or pass structural decision logged", value=match_state["checklist"]["c17"], key="cb17")
-    
+    match_state["checklist"]["c11"] = st.checkbox("Final injury report checks completed", value=match_state["checklist"]["c11"], key="cb11_ctx_chk")
+    match_state["checklist"]["c12"] = st.checkbox("Check early line news leaks", value=match_state["checklist"]["c12"], key="cb12_ctx_chk")
+    match_state["checklist"]["c13"] = st.checkbox("Monitor odds movements sheets", value=match_state["checklist"]["c13"], key="cb13_ctx_chk")
+    match_state["checklist"]["c14"] = st.checkbox("Official lineups released (60 Mins Out)", value=match_state["checklist"]["c14"], key="cb14_ctx_chk")
+    match_state["checklist"]["c15"] = st.checkbox("Formation/tactical setup verified", value=match_state["checklist"]["c15"], key="cb15_ctx_chk")
+    match_state["checklist"]["c16"] = st.checkbox("Key rotation players in/out accounted for", value=match_state["checklist"]["c16"], key="cb16_ctx_chk")
+    match_state["checklist"]["c17"] = st.checkbox("Final bet or pass structural decision logged", value=match_state["checklist"]["c17"], key="cb17_ctx_chk")
+
+
+
 
     
     # ==============================================================================
