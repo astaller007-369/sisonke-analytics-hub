@@ -506,6 +506,23 @@ else:
     # ==============================================================================
     # SEGMENT 4 PART 2: INTERACTIVE 7-DAY RESEARCH CHECKLIST GRIDS
     # ==============================================================================
+    # 🟢 STEP 1: INITIALIZE THE MATCH STATE MEMORY CACHE SAFELY
+if "match_state" not in st.session_state:
+    st.session_state["match_state"] = {}
+
+match_state = st.session_state["match_state"]
+
+# Ensure the sub-dictionary for the checklist is ready
+if "checklist" not in match_state:
+    match_state["checklist"] = {f"c{i}": False for i in range(1, 18)}
+
+# 🟢 STEP 2: YOUR ORIGINAL COLUMNS CONFIGURATION CONTINUES UNTOUCHED
+check_col, tracking_col = st.columns([1.1, 0.9])
+with check_col:
+    st.header("⏳ 7-Day Context Checklist")
+    st.markdown("#### 📅 7 Days Out")
+    match_state["checklist"]["c1"] = st.checkbox("Check fixture congestion (3 games in 7 days?)", value=match_state["checklist"]["c1"], key="cb1")
+    
     check_col, tracking_col = st.columns([1.1, 0.9])
 with check_col:
     # 🟢 FIXED ALIGNMENT: Pushed 4 spaces right to sit inside your column container cleanly!
