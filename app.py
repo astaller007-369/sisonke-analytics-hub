@@ -1346,6 +1346,48 @@ with tab_proj:
         odds_away_cs_y = c22.number_input("Away CS Yes:", min_value=1.01, value=4.20)
         odds_correct_score = c23.number_input("Target CS Payout Line:", min_value=1.01, value=8.50)
 
+        # ==============================================================================
+        # 🟢 CRASH-PROOF PROJECTIONS TAB CLOSING LINE LOGGER (ZERO KEY CLASHES)
+        # ==============================================================================
+        st.markdown("---")
+        st.subheader("🚨 Closing Line Logger & Market Shift Monitor")
+        st.markdown("Type in your live market closing lines right before kick-off to evaluate professional line movement deltas automatically.")
+
+        # Ensure your home and away team variables link smoothly to your main dropdowns
+        current_home_team = h_selected_raw if 'h_selected_raw' in locals() else "Home Team"
+        current_away_team = a_selected_raw if 'a_selected_raw' in locals() else "Away Team"
+
+        # 🚨 UNIQUE KEYS USED HERE TO PREVENT ANY SIMULTANEOUS RUNNING CRASHES
+        log_col1, log_col2 = st.columns(2)
+        with log_col1:
+            match_state["cl_h"] = st.number_input(f"Live Closing Line Odds: {current_home_team}", value=float(match_state.get("cl_h", 2.00)), step=0.05, key="unique_pred_tab_cl_h_lock")
+        with log_col2:
+            match_state["cl_a"] = st.number_input(f"Live Closing Line Odds: {current_away_team}", value=float(match_state.get("cl_a", 2.00)), step=0.05, key="unique_pred_tab_cl_a_lock")
+
+        # 📊 AUTOMATED TEAM SHIFT METRIC CARDS
+        op_h_val = float(match_state.get("op_h", 2.00))
+        cl_h_val = float(match_state.get("cl_h", 2.00))
+        op_a_val = float(match_state.get("op_a", 2.00))
+        cl_a_val = float(match_state.get("cl_a", 2.00))
+
+        home_live_shift = ((op_h_val - cl_h_val) / op_h_val) * 100 if op_h_val > 0 else 0.0
+        away_live_shift = ((op_a_val - cl_a_val) / op_a_val) * 100 if op_a_val > 0 else 0.0
+
+        t_shift_c1, t_shift_c2 = st.columns(2)
+        with t_shift_c1:
+            st.metric(
+                label=f"🏠 {current_home_team} Total Trend Shift", 
+                value=f"{home_live_shift:.1f}%", 
+                delta="🔥 Sharp Steam Inflow" if home_live_shift > 1.5 else ("⚠️ Market Drift (Faded)" if home_live_shift < -1.5 else "Stable Line")
+            )
+        with t_shift_c2:
+            st.metric(
+                label=f"✈️ {current_away_team} Total Trend Shift", 
+                value=f"{away_live_shift:.1f}%", 
+                delta="🔥 Sharp Steam Inflow" if away_live_shift > 1.5 else ("⚠️ Market Drift (Faded)" if away_live_shift < -1.5 else "Stable Line")
+    )
+    
+        
         if not filtered_df.empty:
             filtered_df["home_team"] = filtered_df["home_team"].astype(str).str.upper().str.strip()
             filtered_df["away_team"] = filtered_df["away_team"].astype(str).str.upper().str.strip()
