@@ -495,7 +495,7 @@ if not master_db_df.empty and "home" in master_db_df.columns:
                         value=f"{away_historical_shift:.1f}%",
                         delta="🔥 Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
                     )
-            else:
+              else:
                 # Friendly fallback warning message if columns aren't detected in your uploaded spreadsheet
                 st.info("💡 To track historical team price action, ensure your uploaded CSV contains 'opening_odds_home' and 'closing_odds_home' column headers.")
         except Exception as processing_err:
