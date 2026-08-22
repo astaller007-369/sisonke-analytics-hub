@@ -445,7 +445,9 @@ if active_app_tab == "📌 Research & Sentiment Tracker":
 st.subheader("📊 Team Historical Odds Movement Profile")
 
 # Guard check: Ensure your master spreadsheet database contains old line columns to read
-if not master_db_df.empty and "home" in master_db_df.columns:
+# 🟢 LINE 448 FIXED: Added a check ('in locals()') so it won't crash if the file isn't loaded yet!
+if "master_db_df" in locals() and not master_db_df.empty and "home" in master_db_df.columns:
+
     # 🟢 CRASH FIX: Move the team splitter logic BEFORE the try statement block
     if " vs " in str(target_fixture):
         current_home_team = str(target_fixture).split(" vs ")[0].strip()
