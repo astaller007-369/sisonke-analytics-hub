@@ -572,13 +572,19 @@ st.subheader("📊 Team Historical Odds Movement Profile")
 if "master_db_df" in locals() and not master_db_df.empty and "home" in master_db_df.columns:
 
     # 🟢 CRASH FIX: Move the team splitter logic BEFORE the try statement block
-    if " vs " in str(target_fixture):
+    # 🟢 LINE 575 FIXED: Added a check ('in locals()') so it won't crash if no fixture is chosen yet!
+if "master_db_df" in locals() and not master_db_df.empty and "home" in master_db_df.columns:
+    if "target_fixture" in locals() and " vs " in str(target_fixture):
         current_home_team = str(target_fixture).split(" vs ")[0].strip()
         current_away_team = str(target_fixture).split(" vs ")[1].strip()
+    elif 'h_selected_raw' in locals() and 'a_selected_raw' in locals():
+        current_home_team = h_selected_raw
+        current_away_team = a_selected_raw
     else:
         current_home_team = ""
         current_away_team = ""
-      
+
+    
     # 🟢 FIXED ALIGNMENT: Moved the try block back out so it runs for ALL teams
     try:
         # Check if your uploaded CSV has historical opening and closing odds columns
