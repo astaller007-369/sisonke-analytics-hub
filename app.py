@@ -582,7 +582,7 @@ if active_app_tab_selection == "📌 Research & Sentiment Tracker":
         else:
             current_home_team = ""
             current_away_team = ""
-:
+ 
     if "target_fixture" in locals() and " vs " in str(target_fixture):
         current_home_team = str(target_fixture).split(" vs ")[0].strip()
         current_away_team = str(target_fixture).split(" vs ")[1].strip()
