@@ -360,23 +360,7 @@ import os
 import json
 
 # ==============================================================================
-# UPDATED SIDEBAR BLOCK: CORES INITIALIZED WITH ZERO CUT-OFF GATES
-# ==============================================================================
-st.sidebar.title("🧠 SISONKE CONTROL PANEL")
-st.sidebar.markdown("---")
-
-# Your official 4-digit layout league directory map dictionary follows right here...
-
-    
-    # --- STAGE 1: READ STORAGE PERSISTENCE SYSTEMS ---
-# ==============================================================================
-# UPDATED SIDEBAR BLOCK: CORES INITIALIZED WITH ZERO CUT-OFF GATES
-# ==============================================================================
-st.sidebar.title("🧠 SISONKE CONTROL PANEL")
-st.sidebar.markdown("---")
-
-# ==============================================================================
-# 🟢 SIDEBAR REGULAR NAVIGATION LAYER: CHANNELS WORKSPACES CLEANLY WITH NO KILLS
+# 🧠 SISONKE PLATFORM MASTER CONTROL STATION (FLUSH LEFT - 0 SPACES)
 # ==============================================================================
 st.sidebar.title("🧠 SISONKE CONTROL PANEL")
 
@@ -388,8 +372,7 @@ active_app_tab_selection = st.sidebar.radio(
 )
 st.sidebar.markdown("---")
 
-
-# 🟢 FIXED ALIGNMENT: Pulled flush left (0 empty spaces) to match your root script column layer!
+# --- STAGE 1: READ STORAGE PERSISTENCE SYSTEMS ---
 checklist_save_path = "sisonke_checklist_storage.json"
 database_csv_path = "master_sisonke_database.csv"
 
@@ -400,23 +383,106 @@ if os.path.exists(checklist_save_path):
             persisted_data = json.load(f)
     except Exception:
         pass
+        
+available_leagues = ["No Active Database Connected"]
+master_db_df = pd.DataFrame()
+if os.path.exists(database_csv_path):
+    try:
+        master_db_df = pd.read_csv(database_csv_path)
+        master_db_df.columns = [str(c).strip().lower().replace(" ", "_") for c in master_db_df.columns]
+        if "league" in master_db_df.columns:
+            available_leagues = sorted(master_db_df["league"].dropna().unique().tolist())
+    except Exception:
+        available_leagues = ["Upload Database to Sync"]
+        
+# --- STAGE 2: INTERACTIVE DROPDOWNS CORE ---
+col_l, col_f = st.columns(2)
+with col_l:
+    selected_league = st.selectbox("Active Division Workspace:", options=available_leagues, key="chk_leag_sel")
 
-# --- TRACKER SCREEN HOUSING ---
+# ==============================================================================
+# 📊 AUTOMATED SISONKE TEAM PRICE ACTION DRIFT & STEAM CALCULATOR (FLUSH LEFT)
+# ==============================================================================
+st.markdown("---")
+st.subheader("📊 Team Historical Odds Movement Profile")
+
+# Guard check: Ensure your master spreadsheet database contains old line columns to read
+if "master_db_df" in locals() and not master_db_df.empty and "home" in master_db_df.columns:
+    if 'target_fixture' in locals() and " vs " in str(target_fixture):
+        current_home_team = str(target_fixture).split(" vs ")[0].strip()
+        current_away_team = str(target_fixture).split(" vs ")[1].strip()
+    elif 'h_selected_raw' in locals() and 'a_selected_raw' in locals():
+        current_home_team = h_selected_raw
+        current_away_team = a_selected_raw
+    else:
+        current_home_team = ""
+        current_away_team = ""
+      
+    try:
+        # Check if your uploaded CSV has historical opening and closing odds columns
+        has_odds_columns = "opening_odds_home" in master_db_df.columns and "closing_odds_home" in master_db_df.columns
+        
+        if has_odds_columns and current_home_team and current_away_team:
+            # 🏠 Step 1: Calculate average price movements for the Home Team
+            home_history = master_db_df[master_db_df["home"] == current_home_team]
+            if not home_history.empty:
+                open_avg_h = home_history["opening_odds_home"].mean()
+                close_avg_h = home_history["closing_odds_home"].mean()
+                home_historical_shift = ((open_avg_h - close_avg_h) / open_avg_h) * 100 if open_avg_h > 0 else 0
+            else:
+                home_historical_shift = 0.0
+                
+            # ✈️ Step 2: Calculate average price movements for the Away Team
+            away_history = master_db_df[master_db_df["away"] == current_away_team]
+            if not away_history.empty:
+                open_avg_a = away_history["opening_odds_away"].mean()
+                close_avg_a = away_history["closing_odds_away"].mean()
+                away_historical_shift = ((open_avg_a - close_avg_a) / open_avg_a) * 100 if open_avg_a > 0 else 0
+            else:
+                away_historical_shift = 0.0
+
+            # Render the visual statistical breakdown cards on your mobile layout view
+            t_col1, t_col2 = st.columns(2)
+            with t_col1:
+                st.metric(
+                    label=f"🏠 {current_home_team} Average Line Shift", 
+                    value=f"{home_historical_shift:.1f}%",
+                    delta="🔥 Usually Steams (Sharp Inflow)" if home_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if home_historical_shift < -1.0 else "Stable Line Profile")
+                )
+            with t_col2:
+                st.metric(
+                    label=f"✈️ {current_away_team} Average Line Shift", 
+                    value=f"{away_historical_shift:.1f}%",
+                    delta="🔥 Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
+                )
+        else:
+            st.info("💡 To track historical team price action, ensure your uploaded CSV contains 'opening_odds_home' and 'closing_odds_home' column headers.")
+    except Exception as processing_err:
+        st.write(f"Line Tracker Processing Notice: {processing_err}")
+else:
+    st.info("💡 Sync your master database file in the Analytics Hub to generate automatic team movement charts.")
+
+# ==============================================================================
+# 🏛️ UNBLOCKED SWITCH ROUTER ROUTING CONSOLE ACTIONS (FLUSH LEFT)
+# ==============================================================================
 if active_app_tab_selection == "📌 Research & Sentiment Tracker":
     st.subheader("📌 Sisonke Automated Research & Sentiment Desk")
     st.markdown("---")
-    # Your parallel checklist and 4-day radar matrix scripts run safely inside here...
+    
+    # 🧱 [YOUR 3 COMBINED CHECKLIST SEGMENTS SIT NESTED INSIDE HERE AT 4 SPACES]
 
 elif active_app_tab_selection == "📊 Predictive Analytics Hub":
-    # Your 5 main dashboard tabs (tab_proj, tab_standings, etc.) run safely inside here...
-    tab_proj, tab_standings, tab_history, tab_past, tab_research = st.tabs([
+    st.subheader("🦅 Sisonke Football Predictive Analytics Hub")
+    
+    # 🟢 MASTER VIEWPORT UNLOCKED: Initializes your 5 mathematical trading tabs cleanly
+    tab_proj, tab_standings, tab_history, tab_past, tab_quick_chk = st.tabs([
         "🔮 ACTIVE PROJECTIONS MATRIX", 
         "📋 COMPETITION STANDINGS", 
         "📉 PERFORMANCE BACKTESTER", 
         "📜 HISTORICAL RESULT LEDGER",
         "📌 QUICK RESEARCH HUB"
     ])
-    
+
             
     available_leagues = ["No Active Database Connected"]
     master_db_df = pd.DataFrame()
