@@ -84,6 +84,65 @@ st.markdown("""
     .stMetric { background-color: #0e1117; padding: 0.5rem; border-radius: 4px; border: 1px solid #30363d; }
 </style>
 """, unsafe_allow_html=True)
+
+# ==============================================================================
+# SEGMENT 1 EXTENSION: UPLOAD PORT ENGINE & PERSISTENT DATA HOUSING CHANNEL
+# ==============================================================================
+
+# 💾 STAGE 1: RAM TERMINAL CACHE TRACKING CELL ASSIGNMENT
+if "match_state" not in st.session_state:
+    st.session_state["match_state"] = {
+        "checklist": {f"c{i}": False for i in range(1, 18)},
+        "motivation": "Mid-table, Late Season (😴 Beach Mode / High Underperformance Risk)",
+        "notes": "",
+        "op_h": 2.00, "op_a": 2.00, "d3_h": 2.00, "d3_a": 2.00, "db_h": 2.00, "db_a": 2.00, "cl_h": 2.00, "cl_a": 2.00,
+        "op_o25": 2.00, "op_u25": 2.00, "cl_o25": 2.00, "cl_u25": 2.00,
+        "op_btsy": 2.00, "op_btsn": 2.00, "cl_btsy": 2.00, "cl_btsn": 2.00,
+        "op_h15": 2.00, "op_a15": 2.00, "cl_h15": 2.00, "cl_a15": 2.00,
+        "o_out_price": 5.00, "c_out_price": 5.00
+    }
+
+match_state = st.session_state["match_state"]
+
+# 📁 STAGE 2: INITIALIZE LOCAL DISK FILE SYSTEM BUFFER HOUSING
+master_db_df = pd.DataFrame()
+available_leagues = ["No Active Database Connected"]
+
+if os.path.exists(storage_path):
+    try:
+        master_db_df = pd.read_csv(storage_path)
+    except Exception:
+        pass
+
+# 📥 STAGE 3: INTERACTIVE HISTORICAL MATCHDAY UPLOAD PORT WIDGET
+st.sidebar.markdown("### 📥 Ingest Football Datasets")
+uploaded_file = st.sidebar.file_uploader(
+    "Drop your master CSV database file here to append new matchday lines:", 
+    type=["csv"],
+    key="sisonke_root_manual_csv_uploader_v2026"
+)
+
+if uploaded_file is not None:
+    try:
+        # Read the incoming spreadsheet matrix data raw from memory cells
+        raw_uploaded_df = pd.read_csv(uploaded_file)
+        
+        # Surgically map the spreadsheet structure onto your precise 22-column layout blueprint
+        master_db_df = force_universal_sisonke_schema(raw_uploaded_df)
+        
+        # 🟢 FIXED PORTS: Writes exactly to your top-layer storage_path location variable!
+        master_db_df.to_csv(storage_path, index=False)
+        st.sidebar.success("💾 Persistent Storage Sync Complete!")
+        
+        # Force a quick backend refresh pass so dropdown filters update instantly
+        st.rerun()
+    except Exception as upload_processing_error:
+        st.sidebar.error(f"Ingestion Fault: {upload_processing_error}")
+
+# 👥 STAGE 4: PARSE UNIQUE COMPETITION STRINGS FOR VISUAL VIEWPORT DROPDOWNS
+if not master_db_df.empty and "competition" in master_db_df.columns:
+    available_leagues = sorted(master_db_df["competition"].dropna().unique().tolist())
+
 # ==============================================================================
 # SEGMENT 2 CORE SAFETY PATCH: DYNAMIC SEASONS INPUT FETCH ENGINE
 # ==============================================================================
