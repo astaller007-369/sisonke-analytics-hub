@@ -454,55 +454,52 @@ if not master_db_df.empty and "home" in master_db_df.columns:
         current_home_team = ""
         current_away_team = ""
       
-        try:
-            # The try block now sits safely below the text splitting equations
-            has_odds_columns = "opening_odds_home" in master_db_df.columns and "closing_odds_home" in master_db_df.columns
-
-            # Check if your uploaded CSV has historical opening and closing odds columns
-            # (Standard headers: 'opening_odds_home', 'closing_odds_home', etc.)
-            has_odds_columns = "opening_odds_home" in master_db_df.columns and "closing_odds_home" in master_db_df.columns
-            
-            if has_odds_columns and current_home_team and current_away_team:
-                # 🏠 Step 1: Calculate average price movements for the Home Team
-                home_history = master_db_df[master_db_df["home"] == current_home_team]
-                if not home_history.empty:
-                    open_avg_h = home_history["opening_odds_home"].mean()
-                    close_avg_h = home_history["closing_odds_home"].mean()
-                    home_historical_shift = ((open_avg_h - close_avg_h) / open_avg_h) * 100 if open_avg_h > 0 else 0
-                else:
-                    home_historical_shift = 0.0
-                    
-                # ✈️ Step 2: Calculate average price movements for the Away Team
-                away_history = master_db_df[master_db_df["away"] == current_away_team]
-                if not away_history.empty:
-                    open_avg_a = away_history["opening_odds_away"].mean()
-                    close_avg_a = away_history["closing_odds_away"].mean()
-                    away_historical_shift = ((open_avg_a - close_avg_a) / open_avg_a) * 100 if open_avg_a > 0 else 0
-                else:
-                    away_historical_shift = 0.0
-
-                # Render the visual statistical breakdown cards on your mobile layout view
-                t_col1, t_col2 = st.columns(2)
-                with t_col1:
-                    st.metric(
-                        label=f"🏠 {current_home_team} Average Line Shift", 
-                        value=f"{home_historical_shift:.1f}%",
-                        delta="🔥 Usually Steams (Sharp Inflow)" if home_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if home_historical_shift < -1.0 else "Stable Line Profile")
-                    )
-                with t_col2:
-                    st.metric(
-                        label=f"✈️ {current_away_team} Average Line Shift", 
-                        value=f"{away_historical_shift:.1f}%",
-                        delta="🔥 Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
-                    )
-              else:
-                # Friendly fallback warning message if columns aren't detected in your uploaded spreadsheet
-                st.info("💡 To track historical team price action, ensure your uploaded CSV contains 'opening_odds_home' and 'closing_odds_home' column headers.")
-        except Exception as processing_err:
-            st.write(f"Line Tracker Processing Notice: {processing_err}")
-    else:
-        st.info("💡 Sync your master database file in the Analytics Hub to generate automatic team movement charts.")
+    # 🟢 FIXED ALIGNMENT: Moved the try block back out so it runs for ALL teams
+    try:
+        # Check if your uploaded CSV has historical opening and closing odds columns
+        has_odds_columns = "opening_odds_home" in master_db_df.columns and "closing_odds_home" in master_db_df.columns
         
+        if has_odds_columns and current_home_team and current_away_team:
+            # 🏠 Step 1: Calculate average price movements for the Home Team
+            home_history = master_db_df[master_db_df["home"] == current_home_team]
+            if not home_history.empty:
+                open_avg_h = home_history["opening_odds_home"].mean()
+                close_avg_h = home_history["closing_odds_home"].mean()
+                home_historical_shift = ((open_avg_h - close_avg_h) / open_avg_h) * 100 if open_avg_h > 0 else 0
+            else:
+                home_historical_shift = 0.0
+                
+            # ✈️ Step 2: Calculate average price movements for the Away Team
+            away_history = master_db_df[master_db_df["away"] == current_away_team]
+            if not away_history.empty:
+                open_avg_a = away_history["opening_odds_away"].mean()
+                close_avg_a = away_history["closing_odds_away"].mean()
+                away_historical_shift = ((open_avg_a - close_avg_a) / open_avg_a) * 100 if open_avg_a > 0 else 0
+            else:
+                away_historical_shift = 0.0
+
+            # Render the visual statistical breakdown cards on your mobile layout view
+            t_col1, t_col2 = st.columns(2)
+            with t_col1:
+                st.metric(
+                    label=f"🏠 {current_home_team} Average Line Shift", 
+                    value=f"{home_historical_shift:.1f}%",
+                    delta="🔥 Usually Steams (Sharp Inflow)" if home_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if home_historical_shift < -1.0 else "Stable Line Profile")
+                )
+            with t_col2:
+                st.metric(
+                    label=f"✈️ {current_away_team} Average Line Shift", 
+                    value=f"{away_historical_shift:.1f}%",
+                    delta="🔥 Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
+                )
+        else:
+            # 🟢 FIXED ALIGNMENT: Trimmed the 2 extra spaces so this matches your 'if' statement column perfectly!
+            st.info("💡 To track historical team price action, ensure your uploaded CSV contains 'opening_odds_home' and 'closing_odds_home' column headers.")
+    except Exception as processing_err:
+        st.write(f"Line Tracker Processing Notice: {processing_err}")
+else:
+    st.info("💡 Sync your master database file in the Analytics Hub to generate automatic team movement charts.")
+
 
     # ==============================================================================
     # SEGMENT 4 PART 2: INTERACTIVE 7-DAY RESEARCH CHECKLIST GRIDS
