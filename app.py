@@ -235,7 +235,7 @@ def fetch_thestatsapi_to_sisonke(league_id, target_seasons):
     for season in target_seasons:
             
         sisonke_front_gate = "https://api.thestatsapi.com"
-        endpoint_url = f"{sisonke_front_gate}/api/football/teams/{league_id}/matches?season={season}
+        endpoint_url = f"{sisonke_front_gate}/api/football/teams/{league_id}/matches?season={season}"
         try:
             server_response = requests.get(endpoint_url, headers=headers, timeout=15)
             if server_response.status_code == 200:
