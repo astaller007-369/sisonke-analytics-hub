@@ -569,11 +569,20 @@ st.subheader("📊 Team Historical Odds Movement Profile")
 
 # Guard check: Ensure your master spreadsheet database contains old line columns to read
 # 🟢 LINE 448 FIXED: Added a check ('in locals()') so it won't crash if the file isn't loaded yet!
-if "master_db_df" in locals() and not master_db_df.empty and "home" in master_db_df.columns:
-
-    # 🟢 CRASH FIX: Move the team splitter logic BEFORE the try statement block
-    # 🟢 LINE 575 FIXED: Added a check ('in locals()') so it won't crash if no fixture is chosen yet!
-if "master_db_df" in locals() and not master_db_df.empty and "home" in master_db_df.columns:
+# 🟢 LINE 572 BASELINE ROUTER SWITCH (FLUSH LEFT - 0 SPACES)
+if active_app_tab_selection == "📌 Research & Sentiment Tracker":
+    # 🟢 LINE 576 FIXED: Added exactly 4 empty spaces to the right to nest this block inside the router cleanly!
+    if "master_db_df" in locals() and not master_db_df.empty and "home" in master_db_df.columns:
+        if "target_fixture" in locals() and " vs " in str(target_fixture):
+            current_home_team = str(target_fixture).split(" vs ")[0].strip()
+            current_away_team = str(target_fixture).split(" vs ")[1].strip()
+        elif 'h_selected_raw' in locals() and 'a_selected_raw' in locals():
+            current_home_team = h_selected_raw
+            current_away_team = a_selected_raw
+        else:
+            current_home_team = ""
+            current_away_team = ""
+:
     if "target_fixture" in locals() and " vs " in str(target_fixture):
         current_home_team = str(target_fixture).split(" vs ")[0].strip()
         current_away_team = str(target_fixture).split(" vs ")[1].strip()
