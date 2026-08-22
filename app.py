@@ -369,16 +369,24 @@ st.sidebar.markdown("---")
 
     
     # --- STAGE 1: READ STORAGE PERSISTENCE SYSTEMS ---
-    checklist_save_path = "sisonke_checklist_storage.json"
-    database_csv_path = "master_sisonke_database.csv"
-    
-    persisted_data = {}
-    if os.path.exists(checklist_save_path):
-        try:
-            with open(checklist_save_path, "r") as f:
-                persisted_data = json.load(f)
-        except Exception:
-            pass
+# ==============================================================================
+# UPDATED SIDEBAR BLOCK: CORES INITIALIZED WITH ZERO CUT-OFF GATES
+# ==============================================================================
+st.sidebar.title("🧠 SISONKE CONTROL PANEL")
+st.sidebar.markdown("---")
+
+# 🟢 FIXED ALIGNMENT: Pulled flush left (0 empty spaces) to match your root script column layer!
+checklist_save_path = "sisonke_checklist_storage.json"
+database_csv_path = "master_sisonke_database.csv"
+
+persisted_data = {}
+if os.path.exists(checklist_save_path):
+    try:
+        with open(checklist_save_path, "r") as f:
+            persisted_data = json.load(f)
+    except Exception:
+        pass
+
             
     available_leagues = ["No Active Database Connected"]
     master_db_df = pd.DataFrame()
