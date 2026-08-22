@@ -454,7 +454,7 @@ if not master_db_df.empty and "home" in master_db_df.columns:
         current_home_team = ""
         current_away_team = ""
       
-                try:
+        try:
             # The try block now sits safely below the text splitting equations
             has_odds_columns = "opening_odds_home" in master_db_df.columns and "closing_odds_home" in master_db_df.columns
 
