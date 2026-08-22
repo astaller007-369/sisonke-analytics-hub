@@ -494,6 +494,40 @@ elif active_app_tab_selection == "📊 Predictive Analytics Hub":
                 available_leagues = sorted(master_db_df["league"].dropna().unique().tolist())
         except Exception:
             available_leagues = ["Upload Database to Sync"]
+        # ==============================================================================
+# 📥 UNIFIED RECOVERY ENGINE: READS FROM UPLOADED CSV & MASTER STORAGE
+# ==============================================================================
+available_leagues = ["No Active Database Connected"]
+master_db_df = pd.DataFrame()
+
+# Track if a file has been dragged into your upload port widget
+# (Assumes your file uploader variable is named 'uploaded_file')
+if 'uploaded_file' in locals() and uploaded_file is not None:
+    try:
+        master_db_df = pd.read_csv(uploaded_file)
+        # Automatically save any fresh manual uploads to your master disk channel too
+        master_db_df.to_csv("master_sisonke_database.csv", index=False)
+    except Exception:
+        pass
+
+# 🔄 FALLBACK: If no file is actively uploaded right now, read from your persistent disk file
+if master_db_df.empty and os.path.exists(database_csv_path):
+    try:
+        master_db_df = pd.read_csv(database_csv_path)
+    except Exception:
+        pass
+
+# 👥 PARSE COLUMNS & UNLOCK LEAGUE SELECTIONS FOR YOUR DROPDOWNS
+if not master_db_df.empty:
+    try:
+        master_db_df.columns = [str(c).strip().lower().replace(" ", "_") for c in master_db_df.columns]
+        if "league" in master_db_df.columns:
+            available_leagues = sorted(master_db_df["league"].dropna().unique().tolist())
+    except Exception:
+        available_leagues = ["Error Parsing Spreadsheet Columns"]
+else:
+    available_leagues = ["No Active Database Connected"]
+    
             
     # --- STAGE 2: INTERACTIVE DROPDOWNS CORE ---
     col_l, col_f = st.columns(2)
