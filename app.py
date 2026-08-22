@@ -539,6 +539,7 @@ with check_col:
     # SEGMENT 4 PART 3: MOVING LINE TRACKER & HARD INDUSTRIAL INTERCEPT WALL
     # ==============================================================================
     with tracking_col:
+    # 🟢 PERFECT ALIGNMENT: Pushed right by 4 spaces to match your check_col sibling layer!
     st.header("📈 Multi-Day Multi-Market Intercept Tracker")
     st.markdown("Log market price adjustments across all 22 derivative lines and 4 tracking days to detect sharp money flows.")
     
@@ -588,6 +589,7 @@ with check_col:
             st.markdown("**🚨 Closing Line**")
             match_state["cl_h"] = st.number_input(f"{current_home_team} (CL):", value=float(match_state["cl_h"]), step=0.05, key="m_clh")
             match_state["cl_a"] = st.number_input(f"{current_away_team} (CL):", value=float(match_state["cl_a"]), step=0.05, key="m_cla")
+    
             
                 # 📊 LIVE AUTOMATED TEAM STATUS CARDS (Calculated purely from your inputs above!)
         st.markdown("##### 📊 Real-Time Input Line Shift Status")
