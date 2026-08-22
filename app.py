@@ -1462,7 +1462,7 @@ with tab_proj:
             variance_gap_val = abs(dc_math_probability - mc_prob_val) * 100
             market_convergence_score = max(0.0, 100.0 - variance_gap_val)
             
-             dc_net_edge = (dc_math_probability * float(market_odds)) - 1.0
+            dc_net_edge = (dc_math_probability * float(market_odds)) - 1.0
             mc_net_edge = (mc_prob_val * float(market_odds)) - 1.0
             computed_fair_price = 1.0 / max(0.001, max(dc_math_probability, mc_prob_val))
             
