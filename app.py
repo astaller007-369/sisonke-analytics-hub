@@ -505,7 +505,8 @@ else:
     # SEGMENT 4 PART 2: INTERACTIVE 7-DAY RESEARCH CHECKLIST GRIDS
     # ==============================================================================
     check_col, tracking_col = st.columns([1.1, 0.9])
-    with check_col:
+with check_col:
+    # 🟢 FIXED ALIGNMENT: Pushed 4 spaces right to sit inside your column container cleanly!
     st.header("⏳ 7-Day Context Checklist")
     st.markdown("#### 📅 7 Days Out")
     match_state["checklist"]["c1"] = st.checkbox("Check fixture congestion (3 games in 7 days?)", value=match_state["checklist"]["c1"], key="cb1")
@@ -532,6 +533,7 @@ else:
     match_state["checklist"]["c16"] = st.checkbox("Key rotation players in/out accounted for", value=match_state["checklist"]["c16"], key="cb16")
     match_state["checklist"]["c17"] = st.checkbox("Final bet or pass structural decision logged", value=match_state["checklist"]["c17"], key="cb17")
     
+
     
     # ==============================================================================
     # SEGMENT 4 PART 3: MOVING LINE TRACKER & HARD INDUSTRIAL INTERCEPT WALL
