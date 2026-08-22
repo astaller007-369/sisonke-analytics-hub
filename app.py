@@ -569,9 +569,7 @@ with check_col:
         current_home_team = "Home Team"
         current_away_team = "Away Team"
 
-        current_home_team = str(target_fixture).split(" vs ")[0].strip()
-        current_away_team = str(target_fixture).split(" vs ")[1].strip()
-    
+        
 
     # Initialize all multi-day and multi-market dictionary keys safely in memory cache
     market_keys = [
