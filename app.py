@@ -558,7 +558,17 @@ with check_col:
         st.markdown("Log market price adjustments across all 22 derivative lines and 4 tracking days to detect sharp money flows.")
     
     # 👥 STEP 1: PARSER FOR NAKED TEAM NAMES
-    if " vs " in str(target_fixture):
+        # 🟢 LINE 561 FIXED: Dynamically falls back to your screen's active team selection variables if the fixture string is missing!
+    if 'target_fixture' in locals() and " vs " in str(target_fixture):
+        current_home_team = str(target_fixture).split(" vs ")[0].strip()
+        current_away_team = str(target_fixture).split(" vs ")[1].strip()
+    elif 'h_selected_raw' in locals() and 'a_selected_raw' in locals():
+        current_home_team = h_selected_raw
+        current_away_team = a_selected_raw
+    else:
+        current_home_team = "Home Team"
+        current_away_team = "Away Team"
+
         current_home_team = str(target_fixture).split(" vs ")[0].strip()
         current_away_team = str(target_fixture).split(" vs ")[1].strip()
     else:
