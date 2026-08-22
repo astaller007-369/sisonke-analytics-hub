@@ -1570,7 +1570,7 @@ with tab_proj:
     # ==============================================================================
 # SEGMENT 12 OF 14: GRAPH CABINET EXPANDERS & FPE-EQUIPPED VALUATION SHEET
  # ==============================================================================
-           with st.expander("🔮 View Matrix Distribution & Probability Trajectory Graphs", expanded=True):
+             with st.expander("🔮 View Matrix Distribution & Probability Trajectory Graphs", expanded=True):
                 # 🟢 STEP 1: COMPUTE EXACT TOTAL MATCH GOALS (DC VS MC)
                 exact_total_goals_distribution = {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, "5+": 0.0}
                 for h_g in range(max_score_cap):
