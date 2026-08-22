@@ -733,8 +733,12 @@ with check_col:
         else:
             st.warning("🔷 ALTERNATIVE LINE LOCK: Mixed data signals or negative price movements.")
             
+                # 🟢 FIXED: Check and initialize the notes key safely inside memory bank before the text area reads it
+        if "notes" not in match_state:
+            match_state["notes"] = ""
+
         match_state["notes"] = st.text_area("Match Findings & Lineup Leak Updates Diary:", value=match_state["notes"], key="ta_notes_nv")
-        
+
 
 # ==============================================================================
 # SEGMENT 4 FINALIZED: CONFIGURED 4-DIGIT WORKSPACE DIRECTORY
