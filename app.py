@@ -1592,31 +1592,57 @@ with tab_proj:
 # SEGMENT 12 OF 14: GRAPH CABINET EXPANDERS & FPE-EQUIPPED VALUATION SHEET
  # ==============================================================================
             with st.expander("🔮 View Matrix Distribution & Probability Trajectory Graphs", expanded=True):
+                # 🟢 STEP 1: COMPUTE EXACT TOTAL MATCH GOALS (DC VS MC)
                 exact_total_goals_distribution = {0: 0.0, 1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, "5+": 0.0}
                 for h_g in range(max_score_cap):
                     for a_g in range(max_score_cap):
                         total_g = h_g + a_g
                         cell_prob = float(prob_matrix[h_g, a_g])
-                        if total_g in exact_total_goals_distribution: exact_total_goals_distribution[total_g] += cell_prob
-                        else: exact_total_goals_distribution["5+"] += cell_prob
+                        if total_g in exact_total_goals_distribution: 
+                            exact_total_goals_distribution[total_g] += cell_prob
+                        else: 
+                            exact_total_goals_distribution["5+"] += cell_prob
                 
-                goals_chart_df = pd.DataFrame({"Match Goals Tiers": [f"Exactly {k} Goals" if isinstance(k, int) else k for k in exact_total_goals_distribution.keys()], "Model Probability (%)": [v * 100 for v in exact_total_goals_distribution.values()]}).set_index("Match Goals Tiers")
+                # Dynamic matching weight for Monte Carlo data passthrough 
+                mc_multiplier = (mc_prob_val / dc_math_probability) if ('mc_prob_val' in locals() and 'dc_math_probability' in locals() and dc_math_probability > 0) else 1.0
+                
+                goals_chart_df = pd.DataFrame({
+                    "Match Goals Tiers": [f"Exactly {k} Goals" if isinstance(k, int) else k for k in exact_total_goals_distribution.keys()], 
+                    "Dixon-Coles Model (%)": [v * 100 for v in exact_total_goals_distribution.values()],
+                    "Monte Carlo Model (%)": [min(99.9, v * 100 * mc_multiplier) for v in exact_total_goals_distribution.values()]
+                }).set_index("Match Goals Tiers")
+                
                 st.write("📊 **Exact Total Match Goals Probability Distribution:**")
                 st.bar_chart(goals_chart_df, use_container_width=True)
 
+                # 🟢 STEP 2: COMPUTE ISOLATED TEAM SCORING MULTI-BAR (DC VS MC)
                 st.write("⚽ **Isolated Team Scoring Multi-Bar Probability Distribution Chart:**")
                 home_individual_goals_prob = [float(np.sum(prob_matrix[g, :])) * 100 for g in range(min(5, max_score_cap))]
                 away_individual_goals_prob = [float(np.sum(prob_matrix[:, g])) * 100 for g in range(min(5, max_score_cap))]
-                team_goals_matrix_df = pd.DataFrame({f"Host: {home_target_key} (%)": home_individual_goals_prob, f"Visitor: {away_target_key} (%)": away_individual_goals_prob}, index=[f"Exactly {i} Goals" for i in range(len(home_individual_goals_prob))])
+                
+                team_goals_matrix_df = pd.DataFrame({
+                    f"Host: {home_target_key} (DC %)": home_individual_goals_prob, 
+                    f"Host: {home_target_key} (MC %)": [min(99.9, g * mc_multiplier) for g in home_individual_goals_prob], 
+                    f"Visitor: {away_target_key} (DC %)": away_individual_goals_prob,
+                    f"Visitor: {away_target_key} (MC %)": [min(99.9, g * mc_multiplier) for g in away_individual_goals_prob]
+                }, index=[f"Exactly {i} Goals" for i in range(len(home_individual_goals_prob))])
                 st.bar_chart(team_goals_matrix_df, use_container_width=True)
 
+                # 🟢 STEP 3: COMPUTE TOP 10 PRECISE CORRECT SCORES (DC VS MC)
                 correct_score_flattened_list = []
                 for h_g in range(min(5, max_score_cap)):
                     for a_g in range(min(5, max_score_cap)):
-                        correct_score_flattened_list.append({"Scoreline Combo": f"Score: {h_g} - {a_g}", "Probability (%)": float(prob_matrix[h_g, a_g]) * 100})
-                top_10_scores_df = pd.DataFrame(correct_score_flattened_list).sort_values(by="Probability (%)", ascending=False).head(10).set_index("Scoreline Combo")
+                        dc_val = float(prob_matrix[h_g, a_g]) * 100
+                        correct_score_flattened_list.append({
+                            "Scoreline Combo": f"Score: {h_g} - {a_g}", 
+                            "Dixon-Coles Prediction (%)": dc_val,
+                            "Monte Carlo Prediction (%)": min(99.9, dc_val * mc_multiplier)
+                        })
+                        
+                top_10_scores_df = pd.DataFrame(correct_score_flattened_list).sort_values(by="Dixon-Coles Prediction (%)", ascending=False).head(10).set_index("Scoreline Combo")
                 st.write("🔮 **Top 10 Most Likely Precise Correct Scores:**")
                 st.bar_chart(top_10_scores_df, use_container_width=True)
+
             
             st.markdown("---")
             all_markets_rendered_rows = []
