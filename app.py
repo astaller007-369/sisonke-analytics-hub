@@ -1246,7 +1246,7 @@ with tab_proj:
             index=0, horizontal=True
         )
         
-                referee_strictness_tier = st.radio("Referee Strictness Profile Status Panel:", options=["Lenient (Flow Enforcer)", "Standard Average", "Hyper-Strict (Card Trigger)"], index=1, horizontal=True)
+        referee_strictness_tier = st.radio("Referee Strictness Profile Status Panel:", options=["Lenient (Flow Enforcer)", "Standard Average", "Hyper-Strict (Card Trigger)"], index=1, horizontal=True)
         
         st.markdown("##### 🏟️ Venue Momentum & Active Streak Matrix Display")
         h_streak_label, h_streak_scalar = engine.compute_squad_streak_profile(filtered_df, h_selected_raw)
@@ -1291,7 +1291,8 @@ with tab_proj:
             away_travel_load_units = c_t2.slider("Visitor Mid-Week Travel Fatigue:", 0, 3, 0)
             apply_coastal_climate_shock = st.checkbox("Apply High-Humidity Coastal Shock to Traveler", value=False)
         
-                st.markdown("##### 💵 Commercial Sportsbook Payout Odds Vault")
+        # 🟢 FIXED ALIGNMENT: Pulled back out to your native 8-space baseline layer!
+        st.markdown("##### 💵 Commercial Sportsbook Payout Odds Vault")
         c1, c2, c3 = st.columns(3)
         odds_1 = c1.number_input("Odds Home (1):", min_value=1.01, value=2.10, step=0.05)
         odds_X = c2.number_input("Odds Draw (X):", min_value=1.01, value=3.20, step=0.05)
@@ -1306,7 +1307,7 @@ with tab_proj:
         c9, c10 = st.columns(2)
         odds_over = c9.number_input("Odds Over 2.5:", min_value=1.01, value=1.90, step=0.05)
         odds_under = c10.number_input("Odds Under 2.5:", min_value=1.01, value=1.90, step=0.05)
-        
+
 # ==============================================================================
 # SEGMENT 9 OF 14: ASYMMETRIC COMPILATION LOOPS & DIXON-COLES RHO INJECTION
 # ==============================================================================
