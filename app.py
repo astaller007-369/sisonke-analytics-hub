@@ -380,7 +380,7 @@ import os
 # Renders an interactive layout switcher directly onto your sidebar dashboard panel
 active_app_tab = st.sidebar.radio(
     "Select Active Console Workspace Panel:",
-    options=["ðŸ“Š Predictive Analytics Hub", "ðŸ“ Research & Sentiment Tracker"],
+    options=["🔭“Š Predictive Analytics Hub", "🗂️“ Research & Sentiment Tracker"],
     key="sisonke_platform_navigation_radio_v2026"
 )
  # ==============================================================================
@@ -389,19 +389,19 @@ active_app_tab = st.sidebar.radio(
 import os
 import json
 
-st.sidebar.title("ðŸ§  SISONKE CONTROL PANEL")
+st.sidebar.title("🎛️  SISONKE CONTROL PANEL")
 
 # Renders the interactive panel selector directly onto your sidebar dashboard panel
 active_app_tab = st.sidebar.radio(
     "Select Active Console Workspace Panel:",
-    options=["ðŸ“Š Predictive Analytics Hub", "ðŸ“ Research & Sentiment Tracker"],
+    options=["🔭“Š Predictive Analytics Hub", "🗂️“ Research & Sentiment Tracker"],
     key="sisonke_platform_navigation_radio_v2026_final_lock"
 )
 st.sidebar.markdown("---")
 
 # ðŸ›‘ THE INTERCEPT GUARD: If you click the tracker tab, render it and stop execution instantly!
-if active_app_tab == "ðŸ“ Research & Sentiment Tracker":
-    st.subheader("ðŸ“ Sisonke Automated Research & Sentiment Desk")
+if active_app_tab == "🗂️“ Research & Sentiment Tracker":
+    st.subheader("🗂️“ Sisonke Automated Research & Sentiment Desk")
     st.markdown("---")
     
     # --- STAGE 1: READ STORAGE PERSISTENCE SYSTEMS ---
@@ -462,7 +462,7 @@ if active_app_tab == "ðŸ“ Research & Sentiment Tracker":
     # AUTOMATED SISONKE TEAM PRICE ACTION DRIFT & STEAM CALCULATOR
     # ==============================================================================
     st.markdown("---")
-    st.subheader("ðŸ“Š Team Historical Odds Movement Profile")
+    st.subheader("📈“Š Team Historical Odds Movement Profile")
 
     # Guard check: Ensure your master spreadsheet database contains old line columns to read
     if not master_db_df.empty and "home" in master_db_df.columns:
@@ -507,15 +507,15 @@ if active_app_tab == "ðŸ“ Research & Sentiment Tracker":
                 t_col1, t_col2 = st.columns(2)
                 with t_col1:
                     st.metric(
-                        label=f"ðŸ  {current_home_team} Average Line Shift", 
+                        label=f"🏠  {current_home_team} Average Line Shift", 
                         value=f"{home_historical_shift:.1f}%",
-                        delta="ðŸ”¥ Usually Steams (Sharp Inflow)" if home_historical_shift > 1.0 else ("âš ï¸ Usually Drifts (Faded)" if home_historical_shift < -1.0 else "Stable Line Profile")
+                        delta="🔥”¥ Usually Steams (Sharp Inflow)" if home_historical_shift > 1.0 else ("âš ï¸ Usually Drifts (Faded)" if home_historical_shift < -1.0 else "Stable Line Profile")
                     )
                 with t_col2:
                     st.metric(
-                        label=f"âœˆï¸ {current_away_team} Average Line Shift", 
+                        label=f"¸ {current_away_team} Average Line Shift", 
                         value=f"{away_historical_shift:.1f}%",
-                        delta="ðŸ”¥ Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("âš ï¸ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
+                        delta="🔥”¥ Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("âš ï¸ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
                     )
             else:
                 # Friendly fallback warning message if columns aren't detected in your uploaded spreadsheet
