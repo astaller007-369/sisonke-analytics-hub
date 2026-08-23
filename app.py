@@ -380,7 +380,7 @@ import os
 # Renders an interactive layout switcher directly onto your sidebar dashboard panel
 active_app_tab = st.sidebar.radio(
     "Select Active Console Workspace Panel:",
-    options=["🔭“Š Predictive Analytics Hub", "🗂️“ Research & Sentiment Tracker"],
+    options=["🔭Predictive Analytics Hub", "🗂️ Research & Sentiment Tracker"],
     key="sisonke_platform_navigation_radio_v2026"
 )
  # ==============================================================================
