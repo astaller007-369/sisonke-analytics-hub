@@ -208,7 +208,7 @@ def fetch_thestatsapi_to_sisonke(league_id, target_seasons):
     # Your Universal Structural Converter Module intercepts this clean output layout right here!
     return final_sanitized_pipeline_df.drop(columns=["match_date_parsed"], errors="ignore")
 
-st.title("ðŸ¦… Sisonke Football Predictive Analytics Hub")
+st.title("🦅 Sisonke Football Predictive Analytics Hub")
 st.caption("we beat the odds.")
 import streamlit as st
 import requests
@@ -893,7 +893,7 @@ if st.sidebar.button("📅🔄 Sync 3-Month Fixtures Only", key="sisonke_fixture
             st.sidebar.error(f"Connection Fault: {e}")
 
 # â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-st.sidebar.markdown("### ðŸ“ Historical Matchday Upload Port")
+st.sidebar.markdown("### 📤 Historical Matchday Upload Port")
 uploaded_file_stream = st.sidebar.file_uploader("Drop your master CSV database file here to append new matchday lines:", type=["csv"], key="csv_manual_uploader_v1")
 
 storage_path = "master_sisonke_database.csv"
@@ -921,7 +921,7 @@ if uploaded_file_stream is not None:
         combined_records_df.to_csv(storage_path, index=False)
         st.session_state["full_validation_df"] = combined_records_df.copy()
         st.session_state["processed_cache_success"] = True
-        st.sidebar.success("ðŸ’¾ Persistent Storage Sync Complete!")
+        st.sidebar.success("💾✅ Persistent Storage Sync Complete!")
         st.rerun()
     except Exception as write_disk_err:
         st.sidebar.error(f"Local Storage Write Fault: {write_disk_err}")
@@ -935,7 +935,7 @@ try:
     with open("master_sisonke_database.csv", "rb") as local_storage_file:
         csv_bytes_data = local_storage_file.read()
     st.sidebar.download_button(
-        label="ðŸ“¥ Download CSV from Saved Storage",
+        label="📥 Download CSV from Saved Storage",
         data=csv_bytes_data,
         file_name=f"exported_{selected_workspace.lower().replace(' ', '_')}_clean.csv",
         mime="text/csv",
