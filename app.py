@@ -507,23 +507,23 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
                 t_col1, t_col2 = st.columns(2)
                 with t_col1:
                     st.metric(
-                        label=f"🏠  {current_home_team} Average Line Shift", 
+                        label=f"🏠 {current_home_team} Average Line Shift", 
                         value=f"{home_historical_shift:.1f}%",
-                        delta="🔥”¥ Usually Steams (Sharp Inflow)" if home_historical_shift > 1.0 else ("âš ï¸ Usually Drifts (Faded)" if home_historical_shift < -1.0 else "Stable Line Profile")
+                        delta="🔥Usually Steams (Sharp Inflow)" if home_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if home_historical_shift < -1.0 else "Stable Line Profile")
                     )
                 with t_col2:
                     st.metric(
                         label=f"¸ {current_away_team} Average Line Shift", 
                         value=f"{away_historical_shift:.1f}%",
-                        delta="🔥”¥ Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("âš ï¸ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
+                        delta="🔥Usually Steams (Sharp Inflow)" if away_historical_shift > 1.0 else ("⚠️ Usually Drifts (Faded)" if away_historical_shift < -1.0 else "Stable Line Profile")
                     )
             else:
                 # Friendly fallback warning message if columns aren't detected in your uploaded spreadsheet
-                st.info("ðŸ’¡ To track historical team price action, ensure your uploaded CSV contains 'opening_odds_home' and 'closing_odds_home' column headers.")
+                st.info("📈 To track historical team price action, ensure your uploaded CSV contains 'opening_odds_home' and 'closing_odds_home' column headers.")
         except Exception as processing_err:
             st.write(f"Line Tracker Processing Notice: {processing_err}")
     else:
-        st.info("ðŸ’¡ Sync your master database file in the Analytics Hub to generate automatic team movement charts.")
+        st.info("🔄 Sync your master database file in the Analytics Hub to generate automatic team movement charts.")
 
     # ==============================================================================
     # SEGMENT 4 PART 2: INTERACTIVE 7-DAY RESEARCH CHECKLIST GRIDS
@@ -531,24 +531,24 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
     check_col, tracking_col = st.columns([1.1, 0.9])
     
     with check_col:
-        st.header("â³ 7-Day Context Checklist")
-        st.markdown("#### ðŸ“… 7 Days Out")
+        st.header("📅✅ 7-Day Context Checklist")
+        st.markdown("#### 📌 7 Days Out")
         match_state["checklist"]["c1"] = st.checkbox("Check fixture congestion (3 games in 7 days?)", value=match_state["checklist"]["c1"], key="cb1")
         match_state["checklist"]["c2"] = st.checkbox("European/Cup games midweek?", value=match_state["checklist"]["c2"], key="cb2")
         match_state["checklist"]["c3"] = st.checkbox("Review H2H last 5 meetings", value=match_state["checklist"]["c3"], key="cb3")
         
-        st.markdown("#### ðŸ“° 72 Hours Out")
+        st.markdown("#### ⏳ 72 Hours Out")
         match_state["checklist"]["c4"] = st.checkbox("Watch manager press conferences", value=match_state["checklist"]["c4"], key="cb4")
         match_state["checklist"]["c5"] = st.checkbox("Check injury reports & suspensions", value=match_state["checklist"]["c5"], key="cb5")
         match_state["checklist"]["c6"] = st.checkbox("Note any rotation hints", value=match_state["checklist"]["c6"], key="cb6")
         
-        st.markdown("#### ðŸ” 24 Hours Out")
+        st.markdown("#### ⌛ 24 Hours Out")
         match_state["checklist"]["c7"] = st.checkbox("Review training photos/videos", value=match_state["checklist"]["c7"], key="cb7")
         match_state["checklist"]["c8"] = st.checkbox("Check team travel distance factors", value=match_state["checklist"]["c8"], key="cb8")
         match_state["checklist"]["c9"] = st.checkbox("Weather forecast verification completed", value=match_state["checklist"]["c9"], key="cb9")
         match_state["checklist"]["c10"] = st.checkbox("Compare lines across 3+ sportsbooks", value=match_state["checklist"]["c10"], key="cb10")
         
-        st.markdown("#### âš¡ Match Day & Lineups Release")
+        st.markdown("#### ✅ Match Day & Lineups Release")
         match_state["checklist"]["c11"] = st.checkbox("Final injury report checks completed", value=match_state["checklist"]["c11"], key="cb11")
         match_state["checklist"]["c12"] = st.checkbox("Check early line news leaks", value=match_state["checklist"]["c12"], key="cb12")
         match_state["checklist"]["c13"] = st.checkbox("Monitor odds movements sheets", value=match_state["checklist"]["c13"], key="cb13")
@@ -560,7 +560,7 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
     # SEGMENT 4 PART 3: MOVING LINE TRACKER & HARD INDUSTRIAL INTERCEPT WALL
     # ==============================================================================
     with tracking_col:
-        st.header("ðŸ“ˆ Multi-Day Multi-Market Intercept Tracker")
+        st.header("📅📈 Multi-Day Multi-Market Intercept Tracker")
         st.markdown("Log market price adjustments across all 22 derivative lines and 4 tracking days to detect sharp money flows.")
         
         # ðŸ‘¥ STEP 1: PARSER FOR NAKED TEAM NAMES
@@ -591,51 +591,51 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
             return "Stable Line"
 
         # ðŸ“¦ DROPDOWN 1: 1X2 MATCH WINNER COVERING ALL 4 DAYS
-        with st.expander("âš½ 1X2 Match Winner Matrix (4-Day Radar)", expanded=True):
+        with st.expander("🤼‍♂️ 1X2 Match Winner Matrix (4-Day Radar)", expanded=True):
             day_c1, day_c2, day_c3, day_c4 = st.columns(4)
             with day_c1:
-                st.markdown("**ðŸ 7 Days Out**")
+                st.markdown("**📌 7 Days Out**")
                 match_state["op_h"] = st.number_input(f"{current_home_team} (7D):", value=float(match_state["op_h"]), step=0.05, key="m_oph")
                 match_state["op_a"] = st.number_input(f"{current_away_team} (7D):", value=float(match_state["op_a"]), step=0.05, key="m_opa")
             with day_c2:
-                st.markdown("**ðŸ“… 3 Days Out**")
+                st.markdown("**⏳ 3 Days Out**")
                 match_state["d3_h"] = st.number_input(f"{current_home_team} (3D):", value=float(match_state["d3_h"]), step=0.05, key="m_d3h")
                 match_state["d3_a"] = st.number_input(f"{current_away_team} (3D):", value=float(match_state["d3_a"]), step=0.05, key="m_d3a")
             with day_c3:
-                st.markdown("**ðŸ” Day Before**")
+                st.markdown("**⌛ Day Before**")
                 match_state["db_h"] = st.number_input(f"{current_home_team} (DB):", value=float(match_state["db_h"]), step=0.05, key="m_dbh")
                 match_state["db_a"] = st.number_input(f"{current_away_team} (DB):", value=float(match_state["db_a"]), step=0.05, key="m_dba")
             with day_c4:
-                st.markdown("**ðŸš¨ Closing Line**")
+                st.markdown("**📉🔒¨ Closing Line**")
                 match_state["cl_h"] = st.number_input(f"{current_home_team} (CL):", value=float(match_state["cl_h"]), step=0.05, key="m_clh")
                 match_state["cl_a"] = st.number_input(f"{current_away_team} (CL):", value=float(match_state["cl_a"]), step=0.05, key="m_cla")
 
         # ðŸ“Š LIVE AUTOMATED TEAM STATUS CARDS (Calculated purely from your inputs above!)
-        st.markdown("##### ðŸ“Š Real-Time Input Line Shift Status")
+        st.markdown("##### 💹 Real-Time Input Line Shift Status")
         home_live_shift = ((float(match_state["op_h"]) - float(match_state["cl_h"])) / float(match_state["op_h"])) * 100 if float(match_state["op_h"]) > 0 else 0.0
         away_live_shift = ((float(match_state["op_a"]) - float(match_state["cl_a"])) / float(match_state["op_a"])) * 100 if float(match_state["op_a"]) > 0 else 0.0
 
         t_col1, t_col2 = st.columns(2)
         with t_col1:
-            st.metric(label=f"ðŸ  {current_home_team} Total Trend", value=f"{home_live_shift:.1f}%", delta="ðŸ”¥ Sharp Steam" if home_live_shift > 1.5 else ("âš ï¸ Market Drift" if home_live_shift < -1.5 else "Stable Line"))
+            st.metric(label=f"🏠 {current_home_team} Total Trend", value=f"{home_live_shift:.1f}%", delta="🔥 Sharp Steam" if home_live_shift > 1.5 else ("⚠️ Market Drift" if home_live_shift < -1.5 else "Stable Line"))
         with t_col2:
-            st.metric(label=f"âœˆï¸ {current_away_team} Total Trend", value=f"{away_live_shift:.1f}%", delta="ðŸ”¥ Sharp Steam" if away_live_shift > 1.5 else ("âš ï¸ Market Drift" if away_live_shift < -1.5 else "Stable Line"))
+            st.metric(label=f"âœˆï¸ {current_away_team} Total Trend", value=f"{away_live_shift:.1f}%", delta="🔥 Sharp Steam" if away_live_shift > 1.5 else ("⚠️ Market Drift" if away_live_shift < -1.5 else "Stable Line"))
 
         # ðŸ“¦ DROPDOWN 2: OVER/UNDER GOAL TOTALS ALTERNATIVE LINES
-        with st.expander("ðŸ¥… Over / Under Goal Totals"):
+        with st.expander("⚽ Over / Under Goal Totals"):
             g_c1, g_c2 = st.columns(2)
             with g_c1:
-                st.markdown("**ðŸ Opening Lines**")
+                st.markdown("**🔐📉 Opening Lines**")
                 match_state["op_o25"] = st.number_input("Opening Over 2.5:", value=float(match_state["op_o25"]), step=0.05, key="n_oo25")
                 match_state["op_u25"] = st.number_input("Opening Under 2.5:", value=float(match_state["op_u25"]), step=0.05, key="n_ou25")
             with g_c2:
-                st.markdown("**ðŸš¨ Live Closing Lines**")
+                st.markdown("**📈🔒 Live Closing Lines**")
                 match_state["cl_o25"] = st.number_input("Live Over 2.5:", value=float(match_state["cl_o25"]), step=0.05, key="n_co25")
                 match_state["cl_u25"] = st.number_input("Live Under 2.5:", value=float(match_state["cl_u25"]), step=0.05, key="n_cu25")
             st.caption(f"**Goal Trend:** Over 2.5: {check_market_shift(match_state['op_o25'], match_state['cl_o25'])} | Under 2.5: {check_market_shift(match_state['op_u25'], match_state['cl_u25'])}")
 
         # ðŸ“¦ DROPDOWN 3: BOTH TEAMS TO SCORE COEFFICIENTS
-        with st.expander("ðŸ’¥ Both Teams to Score (BTTS)"):
+        with st.expander("🥅 Both Teams to Score (BTTS)"):
             b_c1, b_c2 = st.columns(2)
             with b_c1:
                 match_state["op_btsy"] = st.number_input("Opening BTTS Yes:", value=float(match_state["op_btsy"]), step=0.05, key="n_obtsy")
@@ -645,7 +645,7 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
                 match_state["cl_btsn"] = st.number_input("Live BTTS No:", value=float(match_state["cl_btsn"]), step=0.05, key="n_cbtsn")
 
         # ðŸ“¦ DROPDOWN 4: INDIVIDUAL TEAM ISOLATED GOAL VOLUME LINES
-        with st.expander("ðŸ›¡ï¸ Team Exact Totals (Over 1.5)"):
+        with st.expander("⚽Team Exact Totals (Over 1.5)"):
             t_c1, t_c2 = st.columns(2)
             with t_c1:
                 match_state["op_h15"] = st.number_input("Opening Home Over 1.5:", value=float(match_state["op_h15"]), step=0.05, key="n_oh15")
@@ -663,7 +663,7 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
             if ok not in match_state:
                 match_state[ok] = 5.00
 
-        with st.expander("ðŸ† Bookmaker Outrights Radar (League Winner / Relegation)"):
+        with st.expander("📉🏆Bookmaker Outrights Radar (League Winner / Relegation)"):
             st.markdown("##### Log and track long-term seasonal outright lines.")
             
             out_c1, out_c2 = st.columns(2)
@@ -726,11 +726,11 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
         st.metric(label="Calculated Confidence Rating (1-10)", value=f"{auto_confidence:.1f} / 10")
         
         if checked_count < 8:
-            st.error("ðŸ›‘ PASS / NO BET: Information scarcity detected. Check more checklist tasks.")
+            st.error("✋ PASS / NO BET: Information scarcity detected. Check more checklist tasks.")
         elif auto_confidence >= 7.5:
-            st.success("ðŸŽ¯ VALUE TRADING MODE: High verification level matched with solid market sentiment.")
+            st.success("📉🔥 VALUE TRADING MODE: High verification level matched with solid market sentiment.")
         else:
-            st.warning("ðŸ”· ALTERNATIVE LINE LOCK: Mixed data signals or negative price movements.")
+            st.warning("📉📈 ALTERNATIVE LINE LOCK: Mixed data signals or negative price movements.")
             
         match_state["notes"] = st.text_area("Match Findings & Lineup Leak Updates Diary:", value=match_state["notes"], key="ta_notes_nv")
                 
@@ -744,7 +744,7 @@ if active_app_tab == "🗂️“ Research & Sentiment Tracker":
 # SEGMENT 4 FINALIZED: CONFIGURED 4-DIGIT WORKSPACE DIRECTORY
 # ==============================================================================
 # ðŸŸ¢ Every league index has been updated to match the official 4-digit layout!
-st.sidebar.title("ðŸ§  SISONKE CONTROL PANEL")
+st.sidebar.title("🎚️🎛️ SISONKE CONTROL PANEL")
 
 league_directory = {
     "England Championship": 1040, 
@@ -811,7 +811,7 @@ except Exception:
     active_seasons_list = [2025, 2026] # Safe fallback baseline if you leave it empty or make a typo
 
 # BUTTON A: THE ALL-IN-ONE MASTER FETCH BUTTON (History + Fixtures)
-if st.sidebar.button("âš¡ Fetch Live Matchday Data", key="sisonke_api_fetch_trigger_btn_2026"):
+if st.sidebar.button("🔄🌄 Fetch Live Matchday Data", key="sisonke_api_fetch_trigger_btn_2026"):
     with st.spinner(f"Connecting to Data Gateway... Fetching {selected_workspace} records"):
         # We now pass both the league code AND your custom season list into the fetcher!
         incoming_api_df = fetch_thestatsapi_to_sisonke(active_api_id, active_seasons_list)
@@ -823,10 +823,10 @@ if st.sidebar.button("âš¡ Fetch Live Matchday Data", key="sisonke_api_fetch_t
             st.sidebar.success(f"ðŸ“Š {selected_workspace} Synchronized! History and fixtures loaded cleanly.")
             st.rerun()
         else:
-            st.sidebar.error("âŒ Gateway Connection Timeout. Verify Bearer Token or subscription tier.")
+            st.sidebar.error("‼️ Gateway Connection Timeout. Verify Bearer Token or subscription tier.")
 
 # ðŸ“… BUTTON B: THE DEDICATED FIXTURES TRIGGER BUTTON (Fixtures Only)
-if st.sidebar.button("ðŸ“… Sync 3-Month Fixtures Only", key="sisonke_fixtures_exclusive_trigger_v2026"):
+if st.sidebar.button("📅🔄 Sync 3-Month Fixtures Only", key="sisonke_fixtures_exclusive_trigger_v2026"):
     with st.spinner(f"Updating {selected_workspace} Fixture Calendar..."):
         import datetime
         import requests
@@ -883,10 +883,10 @@ if st.sidebar.button("ðŸ“… Sync 3-Month Fixtures Only", key="sisonke_fixtu
                         
                     final_df.to_csv("master_sisonke_database.csv", index=False)
                     st.session_state["full_validation_df"] = final_df.copy()
-                    st.sidebar.success("ðŸ“… 3-Month Fixture List Updated Successfully!")
+                    st.sidebar.success("🔄✅ 3-Month Fixture List Updated Successfully!")
                     st.rerun()
                 else:
-                    st.sidebar.info("ðŸ’¡ No unplayed fixtures scheduled inside the upcoming 90 days.")
+                    st.sidebar.info(" No unplayed fixtures scheduled inside the upcoming 90 days.")
             else:
                 st.sidebar.error(f"API Refused Request. Error Code: {res.status_code}")
         except Exception as e:
@@ -929,7 +929,7 @@ if uploaded_file_stream is not None:
 full_validation_df = st.session_state.get("full_validation_df", pd.DataFrame())
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("ðŸ’¾ System Storage Hub")
+st.sidebar.subheader("💾 System Storage Hub")
 
 try:
     with open("master_sisonke_database.csv", "rb") as local_storage_file:
@@ -943,7 +943,7 @@ try:
         help="Instantly exports the active 22-column regular season file directly to your phone storage."
     )
 except FileNotFoundError:
-    st.sidebar.info("ðŸ’¡ Storage Notice: Local baseline CSV file is not written to disk yet.")
+    st.sidebar.info("⚠️ Storage Notice: Local baseline CSV file is not written to disk yet.")
         
 
     
@@ -1016,7 +1016,7 @@ if not working_pipeline_df.empty:
     working_pipeline_df.drop_duplicates(subset=["league_country", "match_timestamp", "home_team", "away_team"], keep="last", inplace=True)
     uploaded_leagues = sorted(list(working_pipeline_df["league_country"].dropna().unique()))
 else:
-    st.info("ðŸ“‚ Data Control Room Active: Please upload your recent match history CSV file to begin training.")
+    st.info("💾🎚️ Data Control Room Active: Please upload your recent match history CSV file to begin training.")
     st.stop()
 
 selected_league_filter = st.selectbox("Select Target League Workspace Selection:", uploaded_leagues)
@@ -1089,7 +1089,7 @@ if len(settled_past_games) >= 5:
         automatically_tuned_sot_weight = max(0.08, min(0.18, float(round(actual_finishing_rate * 0.40, 3))))
         automatically_tuned_bc_weight = max(0.25, min(0.55, float(round(actual_finishing_rate * 1.25, 3))))
 
-with st.expander("ðŸ› ï¸ Advanced Calibration & Mathematical Tuning Vault", expanded=False):
+with st.expander("🛠️🧮 Advanced Calibration & Mathematical Tuning Vault", expanded=False):
     activate_manual_decay_override = st.checkbox("Uncouple Stage 1 Auto-Tuner (Manual Parameter Override)", value=False)
     if activate_manual_decay_override:
         half_life_days = st.slider("Time-Decay Half Life (Days/Steps)", 3, 90, int(optimal_half_life), 1)
@@ -1104,8 +1104,8 @@ with st.expander("ðŸ› ï¸ Advanced Calibration & Mathematical Tuning Vau
         confidence_floor_input = int(automatically_tuned_confidence_floor)
         rho_parameter_input = float(automatically_tuned_rho_parameter)
         
-        if league_is_frozen_midbreak: st.warning(f"â„ï¸ Hiatus Shield Active: Brier Day loops frozen. Lookback locked to {half_life_days} steps.")
-        else: st.success(f"ðŸŽ¯ Auto-Tuner Active: Lookback window optimized via Brier Score at {half_life_days} calendar days.")
+        if league_is_frozen_midbreak: st.warning(f"🥶 Hiatus Shield Active: Brier Day loops frozen. Lookback locked to {half_life_days} steps.")
+        else: st.success(f" Auto-Tuner Active: Lookback window optimized via Brier Score at {half_life_days} calendar days.")
         st.success(f"ðŸ¦… Volatility Auto-Calibrated: Dampener dynamically tuned to {vol_dampener:.2f} via dispersion.")
         st.success(f"ðŸ›¡ï¸ Dixon-Coles Parameter: Dynamic Rho (Ï) auto-formulated to {rho_parameter_input:+.3f}")
         st.success(f"ðŸ“¦ Squad Stability Framework: Dynamic Turnover Volatility Scalar locked at {automatically_tuned_turnover_volatility:.2f}")
@@ -1114,12 +1114,12 @@ with st.expander("ðŸ› ï¸ Advanced Calibration & Mathematical Tuning Vau
     backtest_window = st.slider("Backtest Window Size (Days)", 90, 365, 180, 5)
     accuracy_threshold_floor = st.slider("Strict Accuracy Floor (%)", 35, 75, 50, 5) / 100.0
     
-    st.markdown("##### ðŸ¤– Secure Telegram Syndicate Dispatch Vault")
+    st.markdown("##### 🤖 Secure Telegram Syndicate Dispatch Vault")
     telegram_token_string = st.text_input("Enter Private Bot Token API Key:", type="password", value="738491024:AAFlokw...")
     telegram_chat_id_vault = st.text_input("Enter Target Syndicate Group Chat ID:", value="-10029384912")
     
     st.markdown("---")
-    st.markdown("##### ðŸ§¹ Local Database Maintenance Panel")
+    st.markdown("##### 🧹💾 Local Database Maintenance Panel")
     clear_c1, clear_c2 = st.columns(2)
     trigger_partial_clear = clear_c1.button(f"ðŸ§¹ Clear {selected_league_filter} Data", key="btn_partial_clear_v1")
     if trigger_partial_clear:
@@ -1217,13 +1217,13 @@ engine = ComprehensivePredictiveRoutingEngine()
 # ==============================================================================
 # SEGMENT 8 OF 14: ASYMMETRIC CONTROLS & TEAM-SPECIFIC TURNOVER CHECKBOXES
 # ==============================================================================
-tab_proj, tab_standings, tab_history, tab_past = st.tabs(["ðŸ”® ACTIVE PROJECTIONS MATRIX", "ðŸ“‹ COMPETITION STANDINGS", "ðŸ“‰ PERFORMANCE BACKTESTER", "ðŸ“œ HISTORICAL RESULT LEDGER"])
+tab_proj, tab_standings, tab_history, tab_past = st.tabs(["🔮 ACTIVE PROJECTIONS MATRIX", "🥇⚽ COMPETITION STANDINGS", "📈📅 PERFORMANCE BACKTESTER", "📈📑 HISTORICAL RESULT LEDGER"])
 
 with tab_proj:
     dash_left, dash_right = st.columns(2)
     
     with dash_left:
-        st.markdown("### â›… Strategic Context Overrides")
+        st.markdown("### ♟️🌄 Strategic Context Overrides")
         all_teams_raw = sorted(list(set(filtered_df["home_team"].dropna().unique()).union(set(filtered_df["away_team"].dropna().unique()))))
         
         all_teams_labels_map = {}
@@ -1241,14 +1241,14 @@ with tab_proj:
         target = {"home_team": h_selected_raw, "away_team": a_selected_raw}
         target_ts = pd.Timestamp.now()
         
-        st.markdown("##### ðŸ“¦ Squad Stability & Divisional Turnover Filters")
+        st.markdown("##### 🏆✅ Squad Stability & Divisional Turnover Filters")
         turn_c1, turn_c2 = st.columns(2)
         
-        host_is_promoted = turn_c1.checkbox(f"Host ({h_selected_raw}): â–² Newly Promoted Side", value=False)
-        host_has_relegation_threat = turn_c1.checkbox(f"Host ({h_selected_raw}): â–¼ Active Relegation Threat", value=False)
+        host_is_promoted = turn_c1.checkbox(f"Host ({h_selected_raw}): 🔼 Newly Promoted Side", value=False)
+        host_has_relegation_threat = turn_c1.checkbox(f"Host ({h_selected_raw}): 🔽 Active Relegation Threat", value=False)
         
-        visitor_is_promoted = turn_c2.checkbox(f"Visitor ({a_selected_raw}): â–² Newly Promoted Side", value=False)
-        visitor_has_relegation_threat = turn_c2.checkbox(f"Visitor ({a_selected_raw}): â–¼ Active Relegation Threat", value=False)
+        visitor_is_promoted = turn_c2.checkbox(f"Visitor ({a_selected_raw}): 🔼 Newly Promoted Side", value=False)
+        visitor_has_relegation_threat = turn_c2.checkbox(f"Visitor ({a_selected_raw}): 🔽 Active Relegation Threat", value=False)
         
         turnover_modifier_h = 1.00
         turnover_modifier_w = 1.00
@@ -1271,7 +1271,7 @@ with tab_proj:
         
         referee_strictness_tier = st.radio("Referee Strictness Profile Status Panel:", options=["Lenient (Flow Enforcer)", "Standard Average", "Hyper-Strict (Card Trigger)"], index=1, horizontal=True)
         
-        st.markdown("##### ðŸŸï¸ Venue Momentum & Active Streak Matrix Display")
+        st.markdown("##### 📉🏟️ Venue Momentum & Active Streak Matrix Display")
         h_streak_label, h_streak_scalar = engine.compute_squad_streak_profile(filtered_df, h_selected_raw)
         a_streak_label, a_streak_scalar = engine.compute_squad_streak_profile(filtered_df, a_selected_raw)
         
@@ -1279,7 +1279,7 @@ with tab_proj:
         card_col1.info(f"**HOST MOMENTUM:**\n* {h_selected_raw}\n* Status: `{h_streak_label}`\n* Impact Multiplier: `{h_streak_scalar * turnover_modifier_h:.2f}x`")
         card_col2.info(f"**VISITOR MOMENTUM:**\n* {a_selected_raw}\n* Status: `{a_streak_label}`\n* Impact Multiplier: `{a_streak_scalar * turnover_modifier_w:.2f}x`")
         
-        with st.expander("ðŸŽ›ï¸ Tactical Setup Blueprints & Calendar Overrides", expanded=False):
+        with st.expander("📅🛠️⚽ Tactical Setup Blueprints & Calendar Overrides", expanded=False):
             st.checkbox("Flag Match Window as PRE-SEASON FIXTURE", value=False, key="cb_preseason_v1")
             c_tact1, c_tact2 = st.columns(2)
             home_blueprint = c_tact1.selectbox("Host: Tactical Setup:", ["Standard Open Play", "Deep Ultra-Defensive Low-Block", "High-Intensity Counter-Pressing Style"])
@@ -1289,11 +1289,11 @@ with tab_proj:
             home_lookahead_distraction = c_cup1.checkbox("Host: Apply Look-Ahead Cup Penalty", value=False)
             away_lookahead_distraction = c_cup2.checkbox("Visitor: Apply Look-Ahead Cup Penalty", value=False)
             
-            st.markdown("##### ðŸŒ¦ï¸ Environmental Condition Settings")
+            st.markdown("##### 🌄🏟️ Environmental Condition Settings")
             pitch_surface_condition = st.selectbox("On-Pitch Surface State:", ["Standard Optimized Turf", "Waterlogged Mud", "Dry Uneven Grass"])
             weather_climate_outlook = st.selectbox("Matchday Weather Outlook:", ["Clear Sky / Ideal Climate", "Torrential Rain Storm", "Gale-Force Wind Interference"])
             
-            st.markdown("##### ðŸ§  Institutional & Psychological Context")
+            st.markdown("##### 🏟️🧠  Institutional & Psychological Context")
             match_venue_ground_setting = st.selectbox("Fixture Venue Ground Context:", ["Standard VenueSplit (Traditional H/A)", "Neutral Ground / Empty-Stadium Lockout"])
             apply_h2h_bogey_hex_penalty = st.checkbox("Apply Historical H2H Bogey Penalty", value=False)
             
@@ -1314,7 +1314,7 @@ with tab_proj:
             away_travel_load_units = c_t2.slider("Visitor Mid-Week Travel Fatigue:", 0, 3, 0)
             apply_coastal_climate_shock = st.checkbox("Apply High-Humidity Coastal Shock to Traveler", value=False)
         
-        st.markdown("##### ðŸ’µ Commercial Sportsbook Payout Odds Vault")
+        st.markdown("##### 💵🪙💰💳 Commercial Sportsbook Payout Odds Vault")
         c1, c2, c3 = st.columns(3)
         odds_1 = c1.number_input("Odds Home (1):", min_value=1.01, value=2.10, step=0.05)
         odds_X = c2.number_input("Odds Draw (X):", min_value=1.01, value=3.20, step=0.05)
@@ -1495,11 +1495,11 @@ with tab_proj:
                 "Sportsbook Live Odds": f"{float(market_odds):.2f}",
                 "Model Edge (%)": f"{dc_net_edge * 100:+.1f}% (DC) | {mc_net_edge * 100:+.1f}% (MC)", #  DUAL EDGE
                 "True Fair Odds Line": f"{computed_fair_price:.2f}",
-                "Value Edge Verdict": " ELITE VALUE" if (dc_net_edge >= 0.05 and mc_net_edge >= 0.05) else " TRAP / FADE"
+                "Value Edge Verdict": "🔥 ELITE VALUE" if (dc_net_edge >= 0.05 and mc_net_edge >= 0.05) else "🪤 TRAP / FADE"
             })
             
         # Step 3: Render the upgraded interactive tracking dataframe board live on your screen layout
-        st.markdown("###  Comprehensive Multi-Engine Market Board")
+        st.markdown("###  ⚓💎🚀 Comprehensive Multi-Engine Market Board")
         st.dataframe(pd.DataFrame(market_payload_records), use_container_width=True, hide_index=True)
         
         # ==============================================================================
